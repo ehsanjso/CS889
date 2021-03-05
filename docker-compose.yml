@@ -1,0 +1,43 @@
+version: "3"
+services:
+  cs889_frontend:
+    container_name: cs889_frontend
+    restart: always
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    links:
+      - cs889_backend
+    depends_on:
+      - cs889_backend
+    environment:
+      - APP_CONFIG_API_URL=//localhost:8080
+  cs889_backend:
+    container_name: cs889_backend
+    restart: always
+    build:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/assets:/app/assets
+    ports:
+      - "8080:8888"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongo:27017/cs889
+      - ADMIN_URL=//localhost:8080
+      - PORT=8888
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
