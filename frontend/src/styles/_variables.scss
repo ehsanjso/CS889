@@ -1,0 +1,201 @@
+// Variables
+
+//SIDEBAR
+
+//TYPO
+$font-light: 300;
+$font-regular: 400;
+$font-bold: 500;
+
+//FONT SIZES & STYLES
+$font-size-h6: 36px;
+$font-size-h5: 36px;
+$font-size-h4: 32px; //Category Titles, Credit and Prices
+$font-size-h3: 26px; //Widgets Titles
+$font-size-h2: 22px; //Tabs, NavTitles and Card Item Titles
+$font-size-h1: 18px; //Sidebar Items
+$font-size-large-title: 22px;
+$font-size-subtitle: 16px;
+$font-size-button: 16px; //Buttons and Blue Links
+$font-size-mini-button: 15px; //Buttons and Blue Links
+$font-size-item-subtitle: 14px; //Card Items Subtitles
+$font-size-field-header: 14px;
+$font-size-small-desc: 14px;
+$font-size-code: 14px;
+$font-size-little-desc: 12px;
+
+$font-family-code: "Roboto Mono";
+
+$icon-size-small: 12px;
+
+//
+// Color system
+//
+
+// stylelint-disable
+$white: #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$gray-999: #181a1d !default;
+$black: #000 !default;
+
+$grays: () !default;
+$grays: map-merge(
+  (
+    "100": $gray-100,
+    "200": $gray-200,
+    "300": $gray-300,
+    "400": $gray-400,
+    "500": $gray-500,
+    "600": $gray-600,
+    "700": $gray-700,
+    "800": $gray-800,
+    "900": $gray-900,
+  ),
+  $grays
+);
+
+//  COLORS -------------------------------
+$primary-disabled-light: #12141a;
+$primary-disabled: #515b77;
+
+$primary: #59b065;
+$primary-07: #406de8b0;
+$primary-05: #406de881;
+$primary-03: #406de83b;
+$primary-02: #406de818;
+$primary-01: #1c202e;
+$primary-hover: #5f85ec;
+
+$dark-primary-hover: #272b36;
+
+$dark-primary: #15181e; //Cards, Sidebar
+$dark-secondary: #15181e; //Background
+$dark-secondary-02: #1a1c23; //Background
+$dark-secondary-fade: #15181eef; //Background
+
+$dark-secondary-gradinet: linear-gradient(to top, #15181e, #15181e00);
+
+$white-blue-primary: #b3c4ff;
+$white-blue: #ebeefa; //Sidebar Icons & Text, Card Icons
+$white-blue-dark: #b2bddc;
+$white-blue-darker: #8193b8;
+
+$white: #ffffff;
+$link: #809bff;
+$link-hover: #b3c4ff;
+
+$danger-05: #ff4d508c;
+$danger-dark: #3a1112;
+$danger: #ff4d4f;
+$danger-hover: #ff6466;
+
+$success-dark: #021212;
+$success: #129490;
+$success-bright: #18c0ba;
+
+$warning-dark: #3b2f11;
+$warning: #ffbc42;
+$warning-darker: #c19839;
+$warning-hover: #fecc73;
+
+$text-hint: #697996;
+
+$devider: #2f3341;
+$devider-light: #464c61;
+$devider-dark: #1f212b;
+
+$dropwdown-arrow-hover: #191d22;
+
+$sidebar-item-hover: #15181ea6;
+$sidebar-collection-title: #848690;
+
+$list-item-url: #6d7a9b;
+$list-item-icon: #495165;
+
+$positive-balance: #23da1f;
+$negative-balance: #e85140;
+
+// CHART COLORS
+$chart-green: #dcff78;
+$chart-red: #e85140;
+$chart-purple: #acafff;
+$chart-blue: #406ee8;
+$chart-orange: #fa7300;
+//CARD COLORS
+$card-avatar-background: #0d101a;
+$card-avatar-text: #596eb3;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$space-console-padding-top: 22px;
+$space-console-padding-x: 22px;
+$space-console-padding-bottom: 22px;
+
+$spacer: 1rem !default;
+$spacers: () !default;
+$spacers: map-merge(
+  (
+    0: 0,
+    1: (
+      $spacer * 0.25,
+    ),
+    2: (
+      $spacer * 0.5,
+    ),
+    3: $spacer,
+    4: (
+      $spacer * 1.5,
+    ),
+    5: (
+      $spacer * 3,
+    ),
+  ),
+  $spacers
+);
+
+// This variable affects the `.h-*` and `.w-*` classes.
+$sizes: () !default;
+$sizes: map-merge(
+  (
+    25: 25%,
+    50: 50%,
+    75: 75%,
+    100: 100%,
+    auto: auto,
+  ),
+  $sizes
+);
+// stylelint-enable
+
+// grid-breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+) !default;
+
+//  grid system
+$grid-columns: 12 !default;
+$grid-gutter-width: 30px !default;
+$enable-grid-classes: true !default;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+) !default;

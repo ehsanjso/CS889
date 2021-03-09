@@ -36,14 +36,6 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-    studyMode: {
-      type: Boolean,
-      required: true,
-    },
-    isColabMode: {
-      type: Boolean,
-      required: true,
-    },
     logData: {
       type: Boolean,
     },

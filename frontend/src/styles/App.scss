@@ -1,3 +1,57 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body,
+html {
+  width: 100%;
+  height: 100%;
+  background: #15181e;
+  font-family: Roboto;
+}
+
+.blured {
+  filter: blur(5px);
+}
+
+.rtl {
+  direction: rtl !important;
+}
+
+.darker {
+  background: rgba($color: #000000, $alpha: 0.05);
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.wrapper {
+  transition: all 0.3s ease-in;
+  height: 100%;
+
+  &.navigation {
+    transform: translateX(-200px);
+  }
+}
+
+.wrapper-scale {
+  transition: all 0.3s ease-in;
+  background: #15181e;
+  height: 100%;
+  &.navigation {
+    transform-origin: right;
+    transform: scale(0.85);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  }
+}
+
 .App {
   text-align: center;
 }
@@ -26,6 +80,10 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.ant-message {
+  color: #262b4e;
 }
 
 @keyframes App-logo-spin {

@@ -8,8 +8,6 @@ router.post("/users", async (req, res) => {
     ...req.body,
     isVerified: false,
     isAdmin: false,
-    studyMode: false,
-    isColabMode: false,
     logData: false,
   });
 

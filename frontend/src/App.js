@@ -1,25 +1,35 @@
-import logo from "./logo.svg";
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import { store } from "./store/configureStore";
+import AppRouter from "./routers/AppRouter";
+import Loading from "./components/Loading";
+import { startLogin } from "./actions/auth";
 import "./styles/App.scss";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+    };
+  }
+  async componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("cs889-user"));
+    if (user) {
+      await store.dispatch(startLogin(undefined, undefined, user.token));
+    }
+    this.setState(() => ({
+      loading: false,
+    }));
+  }
+  render() {
+    return (
+      <Provider store={store}>
+        {this.state.loading ? <Loading /> : <AppRouter />}
+      </Provider>
+    );
+  }
 }
 
 export default App;

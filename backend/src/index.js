@@ -25,10 +25,10 @@ const io = socketio(server);
 
 //----- Socket IO -------//
 
-const handleDiscussion = require("./socket/handleDiscussion");
+const handleSocket = require("./socket/handleSocket");
 
 io.on("connection", (socket) => {
-  handleDiscussion(socket, io);
+  handleSocket(socket, io);
 });
 
 //----- Socket IO -------//
