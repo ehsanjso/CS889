@@ -1,2 +1,4 @@
 spacy
 rake_nltk
+dframcy
+stanza

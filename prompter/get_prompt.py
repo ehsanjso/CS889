@@ -19,7 +19,6 @@ if __name__ == "__main__":
 
     if args.type == 'sentence':
         test = process(args.text)
-        print(test)
     elif args.type == 'paragraph':
         keywords = extract_keywords(args.text)
         print(keywords)

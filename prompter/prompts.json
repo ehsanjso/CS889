@@ -1,0 +1,12 @@
+{
+    "nounGeneral":[
+        "Can you describe {subject} in more detail?",
+        "What does {subject} look like?"
+    ],
+    "nounPlace":[
+        "What is the weather like in {subject}?"
+    ],
+    "nounPerson":[
+        "What kind of person is {subject}?"
+    ]
+}
