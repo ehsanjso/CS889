@@ -17,11 +17,14 @@ def process(text):
     prompts = load_prompts()
 
     nouns = getNounsFromDoc(doc)
-    print(df)
+    #print(df)
 
+    generated_prompts = []
     for noun in nouns:
         for template in prompts['nounGeneral']:
-            print(writeToTemplate(template,noun))            
+            generated_prompts.append(writeToTemplate(template,noun))
+    
+    return generated_prompts
     
     
 
@@ -52,7 +55,7 @@ def writeToTemplate(template,value,key='{subject}'):
 Load prompts from prompts.json file
 '''
 def load_prompts():
-    with open('prompts.json') as f:
+    with open('./../prompter/prompts.json') as f:
         data = json.load(f)
 
     return data
