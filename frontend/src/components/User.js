@@ -18,17 +18,15 @@ const User = ({ startLogout, email }) => (
           <p className="user-email">{email}</p>
         </div>
         <div className="avatar">
-          <Badge dot>
-            <Avatar
-              style={{
-                backgroundColor: randomColor({
-                  seed: email,
-                }),
-              }}
-              icon={<UserOutlined />}
-            />
-          </Badge>
-          <CaretDownOutlined className="user-dropdown-icon" />
+          <Avatar
+            style={{
+              backgroundColor: randomColor({
+                seed: email,
+              }),
+            }}
+            icon={<UserOutlined />}
+          />
+          {/* <CaretDownOutlined className="user-dropdown-icon" /> */}
         </div>
       </div>
     </Popover>

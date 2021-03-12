@@ -21,7 +21,7 @@ const Loading = () => (
       </div>
     </div>
     <h1>
-      CO<span>/UX</span>
+      CS<span>889</span>
     </h1>
   </div>
 );

@@ -10,17 +10,19 @@
   .login-header {
     position: absolute;
     width: 100%;
-    top: 10px;
+    top: 0px;
+    border-bottom: 1px solid #f8f9fa;
+    height: 60px;
   }
 
   .logo {
-    top: 10px;
+    top: 20px;
   }
 
   .button-transparent {
     background: transparent;
     border-radius: 2px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(14, 16, 26);
     font-size: 17px;
     font-weight: 500;
     height: 35px;
@@ -38,9 +40,8 @@
     z-index: 9999;
 
     &:hover {
-      background: #f6f6f6;
-      color: $primary;
-      box-shadow: 4px 6px 10px 5px rgba(0, 0, 0, 0.2);
+      background: $primary;
+      color: #f6f6f6;
     }
   }
 }
@@ -50,12 +51,11 @@
   position: relative;
   height: 500px;
   border-radius: 20px;
-  background: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.1);
 
   img {
     max-height: 500px;

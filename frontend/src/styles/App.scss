@@ -1,18 +1,17 @@
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
   outline: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body,
 html {
   width: 100%;
   height: 100%;
-  background: #15181e;
-  font-family: Roboto;
+  background: linear-gradient(-180deg, #fff 78%, hsla(0, 0%, 100%, 0));
+  font-family: "Roboto", sans-serif;
+  line-height: 1.4;
+  color: rgb(14, 16, 26);
+  font-size: 22px;
 }
 
 .blured {
@@ -43,7 +42,7 @@ html {
 
 .wrapper-scale {
   transition: all 0.3s ease-in;
-  background: #15181e;
+  background: linear-gradient(-180deg, #fff 78%, hsla(0, 0%, 100%, 0));
   height: 100%;
   &.navigation {
     transform-origin: right;
