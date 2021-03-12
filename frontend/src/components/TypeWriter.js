@@ -3,12 +3,12 @@ import "../styles/components/type-writer.scss";
 
 export default function TypeWriter() {
   return (
-    <div class="typewriter">
-      <div class="slide">
+    <div className="typewriter">
+      <div className="slide">
         <i></i>
       </div>
-      <div class="paper"></div>
-      <div class="keyboard"></div>
+      <div className="paper"></div>
+      <div className="keyboard"></div>
     </div>
   );
 }
