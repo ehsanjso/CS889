@@ -45,7 +45,7 @@ const HOTKEYS = {
 
 const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const [value, setValue] = useState(
-    deserialize(localStorage.getItem(`${localStorageKey}-content`)) || [
+    JSON.parse(localStorage.getItem(`${localStorageKey}-content`)) || [
       {
         type: "paragraph",
         children: [{ text: "" }],
@@ -62,7 +62,8 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
       value={value}
       onChange={(value) => {
         setValue(value);
-        localStorage.setItem(`${localStorageKey}-content`, serialize(value));
+        const content = JSON.stringify(value);
+        localStorage.setItem(`${localStorageKey}-content`, content);
       }}
     >
       {!noToolbar && <Controls />}
