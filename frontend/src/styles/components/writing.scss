@@ -6,3 +6,27 @@
 .editor {
   padding: 0 30px;
 }
+
+.note-btn {
+  position: absolute;
+  right: 0;
+  padding: 10px;
+  background: #fff;
+  color: #6554c0;
+  width: 55px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  border-radius: 10px 0 0 10px;
+  transition: 0.3s all ease;
+  cursor: pointer;
+  box-shadow: -6px 2px 4px 0 rgba(0, 0, 0, 0.2);
+  z-index: 99999;
+
+  &.active {
+    right: 500px;
+    animation: antdDrawerFadeIn 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  }
+}

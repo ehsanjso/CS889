@@ -2,10 +2,10 @@ import React from "react";
 import EditorWrapper from "./EditorWrapper";
 import "../styles/components/writing.scss";
 
-export default function Writing() {
+export default function Writing({ noToolbar, localStorageKey }) {
   return (
     <div className="writing">
-      <EditorWrapper />
+      <EditorWrapper noToolbar={noToolbar} localStorageKey={localStorageKey} />
     </div>
   );
 }

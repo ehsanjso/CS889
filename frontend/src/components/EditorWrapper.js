@@ -25,12 +25,15 @@ const serialize = (value) => {
 
 // Define a deserializing function that takes a string and returns a value.
 const deserialize = (string) => {
-  // Return a value array of children derived by splitting the string.
-  return string.split("\n").map((line) => {
-    return {
-      children: [{ text: line }],
-    };
-  });
+  if (string) {
+    // Return a value array of children derived by splitting the string.
+    return string.split("\n").map((line) => {
+      return {
+        children: [{ text: line }],
+      };
+    });
+  }
+  return false;
 };
 
 const HOTKEYS = {
@@ -42,9 +45,9 @@ const HOTKEYS = {
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
-const EditorWrapper = () => {
+const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const [value, setValue] = useState(
-    deserialize(localStorage.getItem("cs889-content")) || [
+    deserialize(localStorage.getItem(`${localStorageKey}-content`)) || [
       {
         type: "paragraph",
         children: [{ text: "" }],
@@ -61,10 +64,10 @@ const EditorWrapper = () => {
       value={value}
       onChange={(value) => {
         setValue(value);
-        localStorage.setItem("cs889-content", serialize(value));
+        localStorage.setItem(`${localStorageKey}-content`, serialize(value));
       }}
     >
-      <Controls />
+      {!noToolbar && <Controls />}
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}

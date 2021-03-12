@@ -76,7 +76,7 @@
   height: 100%;
   padding: 40px;
   overflow: hidden;
-  position: absolute;
+  // position: absolute;
   right: 0;
 
   h2 {
@@ -103,6 +103,8 @@
     border: none;
     padding: 10px;
     font-size: 15px;
+    border: 2px solid #f8f9fa;
+
     input {
       //   background: #bababf;
       font-size: 15px;
