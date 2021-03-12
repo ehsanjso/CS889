@@ -1,0 +1,24 @@
+.prompts-sidebar {
+  height: 100%;
+  border-left: 1px solid #e2e4eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //   width: 350px;
+  width: 500px;
+  position: relative;
+  //   box-shadow: 0 -25px 56px 0 rgba(96, 101, 123, 0.05);
+}
+
+.ask-prompt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin: 0;
+    padding: 15px 0;
+    color: #555;
+  }
+}

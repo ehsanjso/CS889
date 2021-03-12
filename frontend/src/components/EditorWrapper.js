@@ -43,8 +43,6 @@ const HOTKEYS = {
   "mod+`": "code",
 };
 
-const LIST_TYPES = ["numbered-list", "bulleted-list"];
-
 const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const [value, setValue] = useState(
     deserialize(localStorage.getItem(`${localStorageKey}-content`)) || [

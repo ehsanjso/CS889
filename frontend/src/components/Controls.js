@@ -1,4 +1,5 @@
 import React from "react";
+import { Tooltip } from "antd";
 import {
   BoldOutlined,
   ItalicOutlined,
@@ -19,8 +20,6 @@ import "../styles/components/controls.scss";
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 export default function Controls() {
-  const editor = useSlate();
-
   return (
     <div className="controls">
       <div className="controls-left">
@@ -30,22 +29,22 @@ export default function Controls() {
           </MarkButton>
         </div>
         <div className="control-section">
-          <MarkButton format="bold">
+          <MarkButton format="bold" text="Bold">
             <BoldOutlined />
           </MarkButton>
-          <MarkButton format="italic">
+          <MarkButton format="italic" text="Italic">
             <ItalicOutlined />
           </MarkButton>
-          <MarkButton format="underline">
+          <MarkButton format="underline" text="Underlined">
             <UnderlineOutlined />
           </MarkButton>
         </div>
 
         <div className="control-section">
-          <BlockButton format="bulleted-list">
+          <BlockButton format="bulleted-list" text="Bullet list">
             <UnorderedListOutlined />
           </BlockButton>
-          <BlockButton format="numbered-list">
+          <BlockButton format="numbered-list" text="Numbered list">
             <OrderedListOutlined />
           </BlockButton>
         </div>
@@ -123,32 +122,40 @@ const isMarkActive = (editor, format) => {
   return marks ? marks[format] === true : false;
 };
 
-const BlockButton = ({ format, children }) => {
+const BlockButton = ({ format, children, text }) => {
   const editor = useSlate();
   return (
-    <div
-      className={`control-btn ${isBlockActive(editor, format) ? "active" : ""}`}
-      onMouseDown={(event) => {
-        event.preventDefault();
-        toggleBlock(editor, format);
-      }}
-    >
-      {children}
-    </div>
+    <Tooltip placement="bottom" title={text} color="#9e8ef6">
+      <div
+        className={`control-btn ${
+          isBlockActive(editor, format) ? "active" : ""
+        }`}
+        onMouseDown={(event) => {
+          event.preventDefault();
+          toggleBlock(editor, format);
+        }}
+      >
+        {children}
+      </div>
+    </Tooltip>
   );
 };
 
-const MarkButton = ({ format, children }) => {
+const MarkButton = ({ format, children, text }) => {
   const editor = useSlate();
   return (
-    <div
-      className={`control-btn ${isMarkActive(editor, format) ? "active" : ""}`}
-      onMouseDown={(event) => {
-        event.preventDefault();
-        toggleMark(editor, format);
-      }}
-    >
-      {children}
-    </div>
+    <Tooltip placement="bottom" title={text} color="#9e8ef6">
+      <div
+        className={`control-btn ${
+          isMarkActive(editor, format) ? "active" : ""
+        }`}
+        onMouseDown={(event) => {
+          event.preventDefault();
+          toggleMark(editor, format);
+        }}
+      >
+        {children}
+      </div>
+    </Tooltip>
   );
 };

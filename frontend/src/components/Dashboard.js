@@ -22,7 +22,7 @@ export const Dashboard = () => {
   return (
     <div className="dashboard">
       <Writing localStorageKey="cs889" />
-      {/* <Prompts /> */}
+      <Prompts />
       <Drawer
         title="Notes"
         placement="right"

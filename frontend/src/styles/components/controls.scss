@@ -2,8 +2,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #f8f9fa;
+  border-bottom: 1px solid #e2e4eb;
   margin-bottom: 50px;
+  width: 60%;
+  min-width: 45rem;
 }
 
 .controls-left {
@@ -19,7 +21,7 @@
 
   .control-section {
     border-right: none;
-    border-left: 1px solid #f8f9fa;
+    border-left: 1px solid #e2e4eb;
   }
 }
 
@@ -27,7 +29,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid #f8f9fa;
+  border-right: 1px solid #e2e4eb;
   padding: 0 10px;
   margin: 10px 0;
 
@@ -45,7 +47,7 @@
     cursor: pointer;
 
     &.active {
-      background: #9aa8d5;
+      background: #9e8ef6;
       color: #f8f9fa;
     }
 
@@ -54,7 +56,7 @@
     }
 
     &:hover {
-      background: #9aa8d5;
+      background: #9e8ef6;
       color: #f8f9fa;
     }
   }
