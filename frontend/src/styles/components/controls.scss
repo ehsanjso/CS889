@@ -2,8 +2,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e2e4eb;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 10px;
   margin-bottom: 50px;
+  margin-top: 20px;
   width: 60%;
   min-width: 45rem;
 }

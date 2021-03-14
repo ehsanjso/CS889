@@ -35,13 +35,13 @@ export const Dashboard = () => {
         <Writing noToolbar={true} localStorageKey="cs889-notes" />
       </Drawer>
 
-      <div
+      {/* <div
         className={`note-btn ${visible ? "active" : ""}`}
         onClick={toggleDrawer}
       >
         {visible ? <CaretRightOutlined /> : <CaretLeftOutlined />}
         <FileTextOutlined />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -2,39 +2,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, Slate } from "slate-react";
-import {
-  Editor,
-  Transforms,
-  createEditor,
-  Node,
-  Element as SlateElement,
-} from "slate";
+import { Editor, createEditor } from "slate";
 import { withHistory } from "slate-history";
 import Controls from "./Controls";
-
-// Define a serializing function that takes a value and returns a string.
-const serialize = (value) => {
-  return (
-    value
-      // Return the string content of each paragraph in the value's children.
-      .map((n) => Node.string(n))
-      // Join them all with line breaks denoting paragraphs.
-      .join("\n")
-  );
-};
-
-// Define a deserializing function that takes a string and returns a value.
-const deserialize = (string) => {
-  if (string) {
-    // Return a value array of children derived by splitting the string.
-    return string.split("\n").map((line) => {
-      return {
-        children: [{ text: line }],
-      };
-    });
-  }
-  return false;
-};
 
 const HOTKEYS = {
   "mod+b": "bold",
