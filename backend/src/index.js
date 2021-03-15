@@ -21,7 +21,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(userRouter);
 
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 //----- Socket IO -------//
 

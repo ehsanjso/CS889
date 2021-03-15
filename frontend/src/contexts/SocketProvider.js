@@ -8,15 +8,15 @@ export function useSocket() {
   return useContext(SocketContext);
 }
 
-export function SocketProvider({ projectId, children }) {
+export function SocketProvider({ userId, children }) {
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const newSocket = io(host, { query: { projectId: projectId } });
+    const newSocket = io(host, { query: { userId: userId } });
     setSocket(newSocket);
 
     return () => newSocket.close();
-  }, [projectId]);
+  }, [userId]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

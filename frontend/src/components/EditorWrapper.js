@@ -4,6 +4,8 @@ import isHotkey from "is-hotkey";
 import { Editable, withReact, Slate } from "slate-react";
 import { Editor, createEditor } from "slate";
 import { withHistory } from "slate-history";
+import { usePrompt } from "../contexts/PromptProvider";
+import { v4 as uuidv4 } from "uuid";
 import Controls from "./Controls";
 
 const HOTKEYS = {
@@ -11,6 +13,7 @@ const HOTKEYS = {
   "mod+i": "italic",
   "mod+u": "underline",
   "mod+`": "code",
+  "mod+h": "highlight",
 };
 
 const EditorWrapper = ({ noToolbar, localStorageKey }) => {
@@ -66,6 +69,14 @@ const toggleMark = (editor, format) => {
   } else {
     Editor.addMark(editor, format, true);
   }
+
+  if (format === "highlight") {
+    if (isActive) {
+      Editor.removeMark(editor, "key");
+    } else {
+      Editor.addMark(editor, "key", uuidv4());
+    }
+  }
 };
 
 const isMarkActive = (editor, format) => {
@@ -93,23 +104,48 @@ const Element = ({ attributes, children, element }) => {
 };
 
 const Leaf = ({ attributes, children, leaf }) => {
+  const { activePrompt, setActivePrompt } = usePrompt();
+  const onClick = () => {
+    const { key } = leaf;
+    if (key) {
+      setActivePrompt(leaf.key);
+    } else {
+      setActivePrompt(undefined);
+    }
+  };
+
   if (leaf.bold) {
-    children = <strong>{children}</strong>;
+    children = <strong onClick={onClick}>{children}</strong>;
   }
 
   if (leaf.code) {
-    children = <code>{children}</code>;
+    children = <code onClick={onClick}>{children}</code>;
   }
 
   if (leaf.italic) {
-    children = <em>{children}</em>;
+    children = <em onClick={onClick}>{children}</em>;
   }
 
   if (leaf.underline) {
-    children = <u>{children}</u>;
+    children = <u onClick={onClick}>{children}</u>;
   }
 
-  return <span {...attributes}>{children}</span>;
+  if (leaf.highlight) {
+    children = (
+      <span
+        className={`highlight ${activePrompt === leaf.key ? "selected" : ""}`}
+        onClick={onClick}
+      >
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <span onClick={onClick} {...attributes}>
+      {children}
+    </span>
+  );
 };
 
 export default EditorWrapper;

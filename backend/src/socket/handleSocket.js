@@ -1,7 +1,7 @@
 const R = require("ramda");
 
 module.exports = function (socket, io) {
-  const socketId = socket.handshake.query.projectId;
+  const socketId = socket.handshake.query.userId;
   socket.join(socketId);
   console.log(`new connection id=${socketId}!`);
 
