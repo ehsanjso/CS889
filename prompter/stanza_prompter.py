@@ -187,99 +187,94 @@ def get_char_emotion_question(ref: CharacterReference, char: Character) -> str:
     question = 'Why are these characters feeling this way?'
   return f'{ref.ref_str}: {question} ({ref.emotion})'
 
-with CoreNLPClient(endpoint='http://165.227.42.195:9000',start_server=StartServer.DONT_START) as client:
-    # NOTES: 
-    #   - all dialogue must be in double quotes
-    #   - this takes a while to run the first time
 
 
-    # text = """It was the first day of school. I was so excited to go. I got ready so fast, and my mom dropped me off. 
-    # When I got to class, I was so surprised to see a monkey sitting at a desk. I asked my teacher why there was a monkey in our class.
-    # She said he was a new student. I started to laugh. Then, all of a sudden, the monkey started to laugh too. We were both so shocked.
-    # We were both fascinated by each other."""
-
-    # text = """
-    # The teacher was upset. I noticed that she looked really lonely. Sam noticed I looked confused and angry. I had never been so angry in my life.
-    # """
-
-    text = "I got ready so fast."
-
-    # I am tall. 
-    # I got ready so fast. 
-    # I was so surprised to see a monkey sitting at a desk. 
-    # He said he was a new student. 
-    # Jupitar was feeling sad.
-    # You looked beautiful.
-    # You looked dejected.
+# NOTES: 
+#   - all dialogue must be in double quotes
+#   - this takes a while to run the first time
 
 
-    document = client.annotate(text)
+# text = """It was the first day of school. I was so excited to go. I got ready so fast, and my mom dropped me off. 
+# When I got to class, I was so surprised to see a monkey sitting at a desk. I asked my teacher why there was a monkey in our class.
+# She said he was a new student. I started to laugh. Then, all of a sudden, the monkey started to laugh too. We were both so shocked.
+# We were both fascinated by each other."""
 
-    document_info = DocumentInfo(document)
-    characters = document_info.chars
-    char_refs = document_info.char_ref_for_loc
-    document.sentence[0].openieTriple
-    # document.sentence[0].token[3]
-
-    print(text)
-    print()
-
-    print("Description Questions")
-    for id, char in characters.items():
-        if char.is_singular:
-            print('  - ', char)
-            phys_question = get_char_phys_descr_question(char)
-            print('  -  Q: ',phys_question)
-            print()
+# text = """
+# The teacher was upset. I noticed that she looked really lonely. Sam noticed I looked confused and angry. I had never been so angry in my life.
+# """
+def get_prompt(text):
+  with CoreNLPClient(endpoint='http://165.227.42.195:9000',start_server=StartServer.DONT_START) as client:
 
 
-    print()
-    print("Emotion Questions")
+      #text = "I got ready so fast."
+      document = client.annotate(text)
 
-    for sent_num, refs in char_refs.items():
-        for tok_num, ref in refs.items():
-            if ref.emotion:
-                char = characters[ref.char_id]
-                print('  - ', ref)
-                print('  - ', char)
-                emotion_question = get_char_emotion_question(ref, char)
-                print('  Q ',emotion_question)
-                print()
-
-    # print("The first time the character is mentioned, ask about physical appearance:\n")
-
-    
-    for id, char_info in get_char_clusters(document).items():
-        if char_info['is_singular']: # Only ask questions about single characters 
-            print('Character Information:')
-            print('  ', char_info)
-            phys_question = get_char_phys_descr_question(char_info)
-            print('    Q: ',phys_question)
-            print()
-
-            # TODO: can dependencies be across sentences?
-            for ref in char_info['references']:
-                sent_num = ref['sent']
-                tok_num = ref['tok']
-                ref_str = ref['str']
-
-        
-    
-        # char_deps = [dep for dep in document.sentence[sent_num].basicDependencies.edge if dep.target == tok_num + 1]
-
-        # for dep in char_deps:
-        #   if dep.dep == 'nsubj':
-        #     source = document.sentence[sent_num].token[dep.source - 1]
-        #     if source.pos == 'JJ' and source.lemma in emotion_list:
-        #       emotion_info = {'emotion': source.lemma, 'sent': sent_num, 'tok': dep.source-1}
-        #       # print(source)
-        #       print(' '.join([token.word for token in document.sentence[sent_num].token]))
-        #       print(f'{ref} -> {emotion_info}')
-        #       print('    Why is the character feeling this way?')
-        #       print(f"    Why is the character {emotion_info['emotion']}?")
-        #       print(f"    Why is the character {emotion_info['emotion']}?")
-        #       print()
+      document_info = DocumentInfo(document)
+      characters = document_info.chars
+      char_refs = document_info.char_ref_for_loc
+      document.sentence[0].openieTriple
 
 
-    parse_tree = document.sentence[0].parseTree
-    print_tree(parse_tree, 0)
+      description_questions = []
+      #print("Description Questions")
+      for id, char in characters.items():
+          if char.is_singular:
+              #print('  - ', char)
+              phys_question = get_char_phys_descr_question(char)
+              #print('  -  Q: ',phys_question)
+              #print()
+              description_questions.append(phys_question)
+
+
+      #print()
+      #print("Emotion Questions")
+
+      for sent_num, refs in char_refs.items():
+          for tok_num, ref in refs.items():
+              if ref.emotion:
+                  char = characters[ref.char_id]
+                  print('  - ', ref)
+                  print('  - ', char)
+                  emotion_question = get_char_emotion_question(ref, char)
+                  print('  Q ',emotion_question)
+                  print()
+
+      # print("The first time the character is mentioned, ask about physical appearance:\n")
+
+      """
+      for id, char_info in get_char_clusters(document).items():
+          if char_info['is_singular']: # Only ask questions about single characters 
+              print('Character Information:')
+              print('  ', char_info)
+              phys_question = get_char_phys_descr_question(char_info)
+              print('    Q: ',phys_question)
+              print()
+
+              # TODO: can dependencies be across sentences?
+              for ref in char_info['references']:
+                  sent_num = ref['sent']
+                  tok_num = ref['tok']
+                  ref_str = ref['str']
+      """
+          
+      
+      # char_deps = [dep for dep in document.sentence[sent_num].basicDependencies.edge if dep.target == tok_num + 1]
+
+      # for dep in char_deps:
+      #   if dep.dep == 'nsubj':
+      #     source = document.sentence[sent_num].token[dep.source - 1]
+      #     if source.pos == 'JJ' and source.lemma in emotion_list:
+      #       emotion_info = {'emotion': source.lemma, 'sent': sent_num, 'tok': dep.source-1}
+      #       # print(source)
+      #       print(' '.join([token.word for token in document.sentence[sent_num].token]))
+      #       print(f'{ref} -> {emotion_info}')
+      #       print('    Why is the character feeling this way?')
+      #       print(f"    Why is the character {emotion_info['emotion']}?")
+      #       print(f"    Why is the character {emotion_info['emotion']}?")
+      #       print()
+
+
+      #parse_tree = document.sentence[0].parseTree
+      #print_tree(parse_tree, 0)
+
+      return description_questions
