@@ -18,13 +18,17 @@
     </form>
 
     <br>
+
+    <p>Description Questions:</p>
+    {% for prompt in prompts['description_qs'] %}
+        <p> - {{prompt}}</p>
+    {% endfor %}
+
     <br>
 
-    <p>Questions:</p>
-    <br>
-    {% for prompt in prompts %}
-    <p> - {{prompt}}</p>
-    <br>
+    <p>Emotion Questions:</p>
+    {% for prompt in prompts['emotion_qs'] %}
+        <p> - {{prompt}}</p>
     {% endfor %}
 
 </body>
