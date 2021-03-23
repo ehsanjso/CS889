@@ -3,7 +3,7 @@ import sys
 sys.path.insert(1, './config')
 
 import flask
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from settings import DefaultConfig
 from stanza_prompter import get_prompt
 
@@ -20,7 +20,16 @@ except:
 
 @app.route('/', methods=['GET'])
 def index():
-    return f"<h1> {app.config['DEBUG']} </h1>"
+    is_debug = app.config['DEBUG']
+    return render_template('index.html', is_debug=is_debug)
+
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    text = request.form['text']
+    prompts = get_prompt(text, app.config['CORENLP_SERVER'])
+    is_debug = app.config['DEBUG']
+    return render_template('index.html', prompts=prompts, input=text, is_debug=is_debug)
 
 
 @app.route('/api/get_prompt', methods=['GET'])

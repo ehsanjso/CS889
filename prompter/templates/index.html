@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prompter</title>
+</head>
+<body>
+    <h1>Prompter</h1>
+    <p>Debug: {{is_debug}}</p>
+
+    <br>
+
+    <p>Input some text: </p>
+    <form action="{{ url_for('submit') }}" method="POST">
+        <textarea style="width: 80%" name="text">{{input}}</textarea>
+        <br>
+        <input type="submit">
+    </form>
+
+    <br>
+    <br>
+
+    <p>Questions:</p>
+    <br>
+    {% for prompt in prompts %}
+    <p> - {{prompt}}</p>
+    <br>
+    {% endfor %}
+
+</body>
+</html>
