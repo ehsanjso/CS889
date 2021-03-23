@@ -5,7 +5,6 @@ sys.path.insert(1, './config')
 import flask
 from flask import request, jsonify
 from settings import DefaultConfig
-
 from stanza_prompter import get_prompt
 
 app = flask.Flask(__name__)
@@ -18,9 +17,10 @@ try:
 except:
     print("Environment Variable config not found. Using default configuration.")
 
+
 @app.route('/', methods=['GET'])
 def index():
-    return "<h1>" + app.config['DEBUG'] + "</h1>"
+    return f"<h1> {app.config['DEBUG']} </h1>"
 
 
 @app.route('/api/get_prompt', methods=['GET'])
