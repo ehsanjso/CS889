@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
     "@craco/craco": "^6.1.1",
+    "@react-hook/throttle": "^2.2.0",
     "@react-hook/window-size": "^3.0.7",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -31,6 +32,7 @@
     "slate-history": "^0.59.0",
     "slate-react": "^0.59.0",
     "socket.io-client": "^3.1.2",
+    "throttle-debounce": "^3.0.1",
     "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },

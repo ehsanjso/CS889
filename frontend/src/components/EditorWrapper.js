@@ -1,5 +1,11 @@
 // Import React dependencies.
-import React, { useCallback, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, Slate } from "slate-react";
 import { Editor, createEditor } from "slate";
@@ -28,6 +34,21 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const { updateText } = usePrompt();
+  const didMount = useRef(false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedFetch = useMemo(() => debounce(updateText, 1000), []);
+
+  // useDebounce;
+  useEffect(() => {
+    if (didMount.current) {
+      debouncedFetch(value);
+    } else {
+      didMount.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return (
     <Slate
@@ -146,6 +167,29 @@ const Leaf = ({ attributes, children, leaf }) => {
       {children}
     </span>
   );
+};
+
+const debounce = (func, delay) => {
+  let debounceHandler;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceHandler);
+    debounceHandler = setTimeout(() => func.apply(context, args), delay);
+  };
+};
+
+const throttle = (func, limit) => {
+  let inThrottle;
+  return function () {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
 };
 
 export default EditorWrapper;
