@@ -1,5 +1,5 @@
 import flask
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 
 from stanza_prompter import get_prompt
 
@@ -9,7 +9,14 @@ app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
 def index():
-    return "<h1>Test</h1>"
+    return render_template('index.html')
+
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    text = request.form['text']
+    prompts = get_prompt(text)
+    return  render_template('index.html', prompts=prompts, input=text)
 
 
 @app.route('/api/get_prompt', methods=['GET'])
