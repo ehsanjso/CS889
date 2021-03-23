@@ -33,7 +33,8 @@ export const Dashboard = () => {
             <Prompts />
             <Drawer
               title="Notes"
-              placement="right"
+              className="note-drawer"
+              placement="left"
               closable={true}
               onClose={onClose}
               visible={visible}
@@ -46,13 +47,13 @@ export const Dashboard = () => {
         </TrackProvider>
       </SocketProvider>
 
-      {/* <div
+      <div
         className={`note-btn ${visible ? "active" : ""}`}
         onClick={toggleDrawer}
       >
-        {visible ? <CaretRightOutlined /> : <CaretLeftOutlined />}
+        {visible ? <CaretLeftOutlined /> : <CaretRightOutlined />}
         <FileTextOutlined />
-      </div> */}
+      </div>
     </div>
   );
 };

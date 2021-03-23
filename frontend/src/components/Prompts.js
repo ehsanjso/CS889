@@ -9,17 +9,18 @@ export default function Prompts() {
   const [prompts, setPrompts] = useState([]);
   return (
     <div className="prompts-sidebar">
-      {R.isEmpty(prompts) ? (
-        <div className="ask-prompt">
-          <TypeWriter />
-          <p>Do you feel stuck?</p>
-          <Button type="primary" onClick={() => setPrompts(["hi", "hiii"])}>
-            Get Help!
-          </Button>
-        </div>
-      ) : (
-        prompts.map((prompt) => <Prompt id={prompt} />)
-      )}
+      <div className={`prompt-inner ${R.isEmpty(prompts) ? "" : "not-empty"}`}>
+        {prompts.map((prompt) => (
+          <Prompt id={prompt} key={prompt} />
+        ))}
+      </div>
+      <div className={`ask-prompt ${R.isEmpty(prompts) ? "" : "not-empty"}`}>
+        <TypeWriter />
+        <p>Do you feel stuck?</p>
+        <Button type="primary" onClick={() => setPrompts(["hi", "hiii"])}>
+          Get Help!
+        </Button>
+      </div>
     </div>
   );
 }
