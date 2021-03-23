@@ -202,8 +202,8 @@ def get_char_emotion_question(ref: CharacterReference, char: Character) -> str:
 # text = """
 # The teacher was upset. I noticed that she looked really lonely. Sam noticed I looked confused and angry. I had never been so angry in my life.
 # """
-def get_prompt(text):
-  with CoreNLPClient(endpoint='http://165.227.42.195:9000',start_server=StartServer.DONT_START) as client:
+def get_prompt(text, server='localhost'):
+  with CoreNLPClient(endpoint=f'http://{server}:9000',start_server=StartServer.DONT_START) as client:
 
 
       #text = "I got ready so fast."
