@@ -11,16 +11,17 @@
   position: relative;
   //   box-shadow: 0 -25px 56px 0 rgba(96, 101, 123, 0.05);
   flex-direction: column;
-  padding-top: 100px;
 }
 
 .prompt-inner {
   overflow-y: scroll;
   height: 0;
   transition: 0.2s all ease;
+  width: 100%;
+  padding-top: 100px;
 
   &.not-empty {
-    height: calc(100vh - 400px);
+    height: calc(100vh - 300px);
   }
 }
 
@@ -49,6 +50,12 @@
     padding: 15px 0;
     color: #555;
   }
+
+  .ant-btn-primary {
+    width: 150px;
+    height: 45px;
+    font-size: 20px;
+  }
 }
 
 .prompt {
@@ -65,13 +72,14 @@
   border-radius: 10px;
   padding-bottom: 0;
   overflow: hidden;
-  min-height: 190px;
+  min-height: 150px;
 
   .prompt-message {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 0 20px;
+    width: 100%;
 
     img {
       height: 40px;
@@ -87,6 +95,8 @@
       text-align: left;
       color: #555;
       margin: 0;
+      margin-top: 5px;
+      width: 100%;
     }
   }
 

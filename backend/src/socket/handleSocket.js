@@ -4,12 +4,11 @@ const OldText = require("../models/oldText");
 const User = require("../models/users");
 
 module.exports = function (socket, io) {
-  const socketId = socket.handshake.query.userId;
+  const socketId = socket.handshake.query.socketId;
   socket.join(socketId);
   console.log(`new connection id=${socketId}!`);
 
   socket.on("update-text", async ({ userId, textObject, generalNoteData }) => {
-    console.log(generalNoteData);
     const user = await User.findById(userId).populate("text").exec();
     const text = user.text;
     const rawText = JSON.stringify(textObject);
@@ -36,6 +35,13 @@ module.exports = function (socket, io) {
       revision: revision + 1,
     });
     await newText.save();
+  });
+
+  socket.on("initiate-prompt", async ({}) => {
+    io.to(socketId).emit("receive-prompt", {
+      _id: 11111,
+      question: "What you doing man? Come on?",
+    });
   });
 
   socket.on("log", async (data) => {});

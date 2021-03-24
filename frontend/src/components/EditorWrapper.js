@@ -37,7 +37,6 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const { updateText, updateGeneralNote, updatePromptNote } = usePrompt();
   const didMount = useRef(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFetch = useMemo(() => {
     if (localStorageKey.includes("prompt-notes")) {
       return debounce(updatePromptNote, 1000);
@@ -46,7 +45,7 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
     } else {
       return debounce(updateText, 1000);
     }
-  }, []);
+  }, [updatePromptNote, updateGeneralNote, updateText, localStorageKey]);
 
   // useDebounce;
   useEffect(() => {

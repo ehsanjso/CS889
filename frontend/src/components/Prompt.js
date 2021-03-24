@@ -3,16 +3,12 @@ import Writing from "./Writing";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import Duck from "../assets/images/duck.png";
 
-export default function Prompt({ id }) {
+export default function Prompt({ prompt }) {
   return (
     <div className="prompt">
       <div className="prompt-message">
         <img src={Duck} alt="duck" />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eu
-          vulputate mi. Mauris consectetur blandit felis in malesuada. Integer
-          auctor mi at elementum placerat.
-        </p>
+        <p>{prompt.question}</p>
       </div>
       <div className="prompt-star">
         Is this usefull?{" "}
@@ -22,7 +18,10 @@ export default function Prompt({ id }) {
         </div>
       </div>
       <div className="prompt-note">
-        <Writing noToolbar={true} localStorageKey={`${id}-prompt-notes`} />
+        <Writing
+          noToolbar={true}
+          localStorageKey={`${prompt._id}-prompt-notes`}
+        />
       </div>
     </div>
   );

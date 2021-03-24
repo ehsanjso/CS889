@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import * as R from "ramda";
 import { message } from "antd";
 import axios from "axios";
@@ -11,17 +11,12 @@ export function usePrompt() {
   return useContext(PromptContext);
 }
 
-export function PromptProvider({ children, userId }) {
+export function PromptProvider({ children, user }) {
   const [activePrompt, setActivePrompt] = useState(undefined);
+  const [prompts, setPrompts] = useState([]);
   const [textData, setTextData] = useState();
   const [generalNoteData, setGeneralNoteData] = useState();
   const socket = useSocket();
-
-  useEffect(() => {
-    if (socket == null) return;
-
-    socket.on("receive-prompt", addPrompt);
-  }, [socket]);
 
   const updateText = (textObject) => {
     setTextData(textObject);
@@ -38,15 +33,33 @@ export function PromptProvider({ children, userId }) {
   };
 
   const addPrompt = (prompt) => {
-    console.log(prompt);
+    setPrompts((prevPrompts) => {
+      const prompts = prevPrompts ? [...prevPrompts] : [];
+      prompts.push(prompt);
+      return prompts;
+    });
   };
 
-  const addText = (textObject, generalNoteData) => {
+  const askForPrompt = () => {
+    initiatePrompt();
+  };
+
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("receive-prompt", addPrompt);
+    return () => socket.off("receive-prompt");
+  }, [socket]);
+
+  function addText(textObject, generalNoteData) {
     socket.emit("update-text", {
-      userId,
+      userId: user._id,
       textObject,
       generalNoteData,
     });
+  }
+
+  const initiatePrompt = () => {
+    socket.emit("initiate-prompt", {});
   };
 
   return (
@@ -57,6 +70,8 @@ export function PromptProvider({ children, userId }) {
         updateText,
         updateGeneralNote,
         updatePromptNote,
+        askForPrompt,
+        prompts,
       }}
     >
       {children}

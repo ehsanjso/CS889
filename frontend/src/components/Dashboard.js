@@ -26,9 +26,9 @@ export const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <SocketProvider userId={user._id}>
+      <SocketProvider user={user}>
         <TrackProvider user={user}>
-          <PromptProvider userId={user._id}>
+          <PromptProvider user={user}>
             <Writing localStorageKey="cs889" />
             <Prompts />
             <Drawer
@@ -47,13 +47,13 @@ export const Dashboard = () => {
         </TrackProvider>
       </SocketProvider>
 
-      <div
+      {/* <div
         className={`note-btn ${visible ? "active" : ""}`}
         onClick={toggleDrawer}
       >
         {visible ? <CaretLeftOutlined /> : <CaretRightOutlined />}
         <FileTextOutlined />
-      </div>
+      </div> */}
     </div>
   );
 };
