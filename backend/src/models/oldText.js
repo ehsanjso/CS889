@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const textSchema = new mongoose.Schema(
+const oldTextSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +24,6 @@ const textSchema = new mongoose.Schema(
   }
 );
 
-const Text = mongoose.model("Text", textSchema);
+const OldText = mongoose.model("OldText", oldTextSchema);
 
-module.exports = Text;
+module.exports = OldText;

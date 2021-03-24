@@ -53,16 +53,16 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("comments", {
-  ref: "Comment",
+userSchema.virtual("text", {
+  ref: "Text",
   localField: "_id",
-  foreignField: "author",
+  foreignField: "user",
 });
 
-userSchema.virtual("projects", {
-  ref: "Video",
+userSchema.virtual("prompts", {
+  ref: "Prompt",
   localField: "_id",
-  foreignField: "participants",
+  foreignField: "user",
 });
 
 userSchema.methods.toJSON = function () {

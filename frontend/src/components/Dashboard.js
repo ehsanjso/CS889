@@ -28,7 +28,7 @@ export const Dashboard = () => {
     <div className="dashboard">
       <SocketProvider userId={user._id}>
         <TrackProvider user={user}>
-          <PromptProvider>
+          <PromptProvider userId={user._id}>
             <Writing localStorageKey="cs889" />
             <Prompts />
             <Drawer

@@ -22,7 +22,7 @@ export default function Prompt({ id }) {
         </div>
       </div>
       <div className="prompt-note">
-        <Writing noToolbar={true} localStorageKey={`${id}-notes`} />
+        <Writing noToolbar={true} localStorageKey={`${id}-prompt-notes`} />
       </div>
     </div>
   );

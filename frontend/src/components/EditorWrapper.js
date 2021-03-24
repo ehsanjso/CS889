@@ -34,16 +34,24 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  const { updateText } = usePrompt();
+  const { updateText, updateGeneralNote, updatePromptNote } = usePrompt();
   const didMount = useRef(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedFetch = useMemo(() => debounce(updateText, 1000), []);
+  const debouncedFetch = useMemo(() => {
+    if (localStorageKey.includes("prompt-notes")) {
+      return debounce(updatePromptNote, 1000);
+    } else if (localStorageKey.includes("notes")) {
+      return debounce(updateGeneralNote, 1000);
+    } else {
+      return debounce(updateText, 1000);
+    }
+  }, []);
 
   // useDebounce;
   useEffect(() => {
     if (didMount.current) {
-      debouncedFetch(value);
+      debouncedFetch(value, localStorageKey);
     } else {
       didMount.current = true;
     }
