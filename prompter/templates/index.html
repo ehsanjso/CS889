@@ -20,15 +20,7 @@
     <br>
 
     {%if prompts%}
-        <p>Description Questions:</p>
-        {% for prompt in prompts['description_qs'] %}
-            <p> - {{prompt}}</p>
-        {% endfor %}
-
-        <br>
-
-        <p>Emotion Questions:</p>
-        {% for prompt in prompts['emotion_qs'] %}
+        {% for prompt in prompts %}
             <p> - {{prompt}}</p>
         {% endfor %}
     {% endif %}
