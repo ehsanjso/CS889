@@ -19,17 +19,19 @@
 
     <br>
 
-    <p>Description Questions:</p>
-    {% for prompt in prompts['description_qs'] %}
-        <p> - {{prompt}}</p>
-    {% endfor %}
+    {%if prompts%}
+        <p>Description Questions:</p>
+        {% for prompt in prompts['description_qs'] %}
+            <p> - {{prompt}}</p>
+        {% endfor %}
 
-    <br>
+        <br>
 
-    <p>Emotion Questions:</p>
-    {% for prompt in prompts['emotion_qs'] %}
-        <p> - {{prompt}}</p>
-    {% endfor %}
+        <p>Emotion Questions:</p>
+        {% for prompt in prompts['emotion_qs'] %}
+            <p> - {{prompt}}</p>
+        {% endfor %}
+    {% endif %}
 
 </body>
 </html>
