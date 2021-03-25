@@ -3,3 +3,4 @@ rake_nltk
 dframcy
 stanza
 flask
+cerberus

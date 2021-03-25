@@ -1,11 +1,18 @@
 import sys
+
 # insert at 1, 0 is the script path (or '' in REPL)
 sys.path.insert(1, './config')
 
 import flask
 from flask import request, jsonify, render_template
+from cerberus import Validator
 from settings import DefaultConfig
 from stanza_prompter import get_prompt
+
+# Validators for requests
+v = Validator(require_all=True)
+get_all_prompts_schema = {'user_text': {'type': 'string'},
+                          'prompt_type': {'type': 'string', 'allowed': ['story', 'reader']}}
 
 app = flask.Flask(__name__)
 
@@ -32,20 +39,15 @@ def submit():
     return render_template('index.html', prompts=prompts, input=text, is_debug=is_debug)
 
 
-@app.route('/api/get_prompt', methods=['GET'])
-def prompter():
-    params = request.args
-
-    if 'text' in params:
-        text = params['text']
-    else:
-        return "No input text specified."
-
-    prompts = get_prompt(text, app.config['CORENLP_SERVER'])
-
+@app.route('/api/get_all_prompts', methods=['GET'])
+def get_all_prompts():
+    args = dict(request.args)
+    if not v.validate(args, get_all_prompts_schema):
+        return f'Error: {v.errors}'
+    user_text = args['user_text']
+    prompt_type = args['prompt_type']  # TODO: Take prompt type into consideration
+    prompts = get_prompt(user_text, app.config['CORENLP_SERVER'])
     return jsonify(prompts)
-
-    
 
 
 app.run(host=app.config['BIND'])
