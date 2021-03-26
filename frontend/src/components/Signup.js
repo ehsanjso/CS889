@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SignupForm from "./SignupForm";
 import Logo from "./Logo";
-import loginSide from "../assets/images/james-pond-Z0uzZSM5i4M-unsplash.jpg";
+import loginSide from "../assets/images/annie-spratt-bGdiuIyN3Rs-unsplash.jpg";
 import "../styles/components/login.scss";
 
 export const Signup = () => (

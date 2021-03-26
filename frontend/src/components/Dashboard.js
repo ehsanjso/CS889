@@ -10,7 +10,9 @@ import {
 import { PromptProvider } from "../contexts/PromptProvider";
 import { SocketProvider } from "../contexts/SocketProvider";
 import { TrackProvider } from "../contexts/TrackProvider";
+import { StudyProvider } from "../contexts/StudyProvider";
 import { useSelector } from "react-redux";
+import StudyToolbar from "./StudyToolbar";
 import "../styles/components/dashboard.scss";
 
 export const Dashboard = () => {
@@ -27,33 +29,36 @@ export const Dashboard = () => {
   return (
     <div className="dashboard">
       <SocketProvider user={user}>
-        <TrackProvider user={user}>
-          <PromptProvider user={user}>
-            <Writing localStorageKey="cs889" />
-            <Prompts />
-            <Drawer
-              title="Notes"
-              className="note-drawer"
-              placement="left"
-              closable={true}
-              onClose={onClose}
-              visible={visible}
-              mask={false}
-              width={500}
-            >
-              <Writing noToolbar={true} localStorageKey="cs889-notes" />
-            </Drawer>
-          </PromptProvider>
-        </TrackProvider>
-      </SocketProvider>
+        <StudyProvider>
+          <TrackProvider user={user}>
+            <PromptProvider user={user}>
+              <Writing localStorageKey="cs889" />
+              <Prompts />
+              <Drawer
+                title="Notes"
+                className="note-drawer"
+                placement="left"
+                closable={true}
+                onClose={onClose}
+                visible={visible}
+                mask={false}
+                width={500}
+              >
+                <Writing noToolbar={true} localStorageKey="cs889-notes" />
+              </Drawer>
+              <div
+                className={`note-btn ${visible ? "active" : ""}`}
+                onClick={toggleDrawer}
+              >
+                {visible ? <CaretLeftOutlined /> : <CaretRightOutlined />}
+                <FileTextOutlined />
+              </div>
 
-      {/* <div
-        className={`note-btn ${visible ? "active" : ""}`}
-        onClick={toggleDrawer}
-      >
-        {visible ? <CaretLeftOutlined /> : <CaretRightOutlined />}
-        <FileTextOutlined />
-      </div> */}
+              <StudyToolbar />
+            </PromptProvider>
+          </TrackProvider>
+        </StudyProvider>
+      </SocketProvider>
     </div>
   );
 };
