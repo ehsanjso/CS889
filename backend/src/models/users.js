@@ -39,6 +39,23 @@ const userSchema = new mongoose.Schema(
     logData: {
       type: Boolean,
     },
+    studyTime: {
+      type: Number,
+      required: true,
+    },
+    pauses: [
+      {
+        reason: { type: String, required: true },
+        studyTime: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    isStudyDone: {
+      type: Boolean,
+      required: true,
+    },
     tokens: [
       {
         token: {

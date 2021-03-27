@@ -32,7 +32,7 @@
   transition: 0.3s all ease;
   cursor: pointer;
   box-shadow: 6px 2px 4px 0 rgba(0, 0, 0, 0.2);
-  z-index: 99999;
+  z-index: 1;
 
   &.active {
     left: 500px;

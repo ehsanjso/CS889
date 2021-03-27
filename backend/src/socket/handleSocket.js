@@ -44,6 +44,27 @@ module.exports = function (socket, io) {
     });
   });
 
+  socket.on("update-study-time", async ({ userId, studyTime }) => {
+    const user = await User.findById(userId);
+    user.studyTime = studyTime;
+    await user.save();
+    io.to(socketId).emit("update-user", user);
+  });
+
+  socket.on("update-study-done", async ({ userId, isStudyDone }) => {
+    const user = await User.findById(userId);
+    user.isStudyDone = isStudyDone;
+    await user.save();
+    io.to(socketId).emit("update-user", user);
+  });
+
+  socket.on("update-pauses", async ({ userId, pause }) => {
+    const user = await User.findById(userId);
+    user.pauses = user.pauses.concat(pause);
+    await user.save();
+    io.to(socketId).emit("update-user", user);
+  });
+
   socket.on("log", async (data) => {});
 
   socket.on("disconnect", () => {

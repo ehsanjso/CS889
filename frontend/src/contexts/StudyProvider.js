@@ -1,10 +1,17 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import * as R from "ramda";
 import moment from "moment";
 import { message } from "antd";
 import axios from "axios";
 import { useSocket } from "./SocketProvider";
 import { host } from "../actions/consts/host";
+import { useDispatch } from "react-redux";
 
 const StudyContext = React.createContext();
 
@@ -12,12 +19,19 @@ export function useStudy() {
   return useContext(StudyContext);
 }
 
-export function StudyProvider({ children }) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [sec, setSec] = useState(0);
+export function StudyProvider({ children, user }) {
+  const dispatch = useDispatch();
+  const socket = useSocket();
 
-  const studyTime = 15 * 60;
-  const remainingTime = studyTime - sec;
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [studyDone, setStudyDone] = useState(user.isStudyDone);
+  const [showPauseModal, setShowPauseModal] = useState(false);
+  const [pauses, setPauses] = useState(user.pauses);
+  const [sec, setSec] = useState(user.studyTime);
+  const didMountRef = useRef(false);
+
+  const studyTimeLength = 15 * 60;
+  const remainingTime = studyTimeLength - sec;
 
   let request = null;
   let start = undefined;
@@ -33,10 +47,16 @@ export function StudyProvider({ children }) {
   };
 
   useEffect(() => {
-    if (isPlaying) {
-      requestAnimationFrame(performAnimation);
+    if (didMountRef.current) {
+      if (isPlaying) {
+        requestAnimationFrame(performAnimation);
+      } else {
+        cancelAnimationFrame(request);
+        setShowPauseModal(true);
+        updateStudyTime(sec);
+      }
     } else {
-      cancelAnimationFrame(request);
+      didMountRef.current = true;
     }
     return () => cancelAnimationFrame(request);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,16 +74,27 @@ export function StudyProvider({ children }) {
     } else if (remainingTime === 60) {
       reminder("Less than 1 min is remaining!");
     }
-  }, [remainingTime]);
 
-  const onFocus = () => {
-    console.log("Tab is in focus");
+    if (remainingTime < 0) {
+      setStudyDone(true);
+      updateStudyTime(studyTimeLength - remainingTime);
+      updateStudyDone(true);
+    }
+  }, [remainingTime, dispatch, studyTimeLength]);
+
+  const setStudyPause = (reason) => {
+    updatePauses({ studyTime: sec, reason });
+    setPauses((prevPauses) => {
+      const finalPauses = prevPauses ? [...prevPauses] : [];
+      finalPauses.push({ studyTime: sec, reason });
+      return finalPauses;
+    });
   };
 
+  const onFocus = () => {};
+
   const onBlur = () => {
-    console.log("Tab is in blur");
     setIsPlaying(false);
-    // TODO: add reason
   };
 
   useEffect(() => {
@@ -76,8 +107,48 @@ export function StudyProvider({ children }) {
     };
   });
 
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("update-user", updateUser);
+    return () => socket.off("update-user");
+  }, [socket]);
+
+  const updateUser = (userData) => {
+    dispatch({ type: "UPDATE_USER", userData });
+  };
+
+  const updateStudyTime = (studyTime) => {
+    socket.emit("update-study-time", {
+      userId: user._id,
+      studyTime,
+    });
+  };
+
+  const updateStudyDone = (isStudyDone) => {
+    socket.emit("update-study-done", {
+      userId: user._id,
+      isStudyDone,
+    });
+  };
+
+  const updatePauses = (pause) => {
+    socket.emit("update-pauses", {
+      userId: user._id,
+      pause,
+    });
+  };
+
   return (
-    <StudyContext.Provider value={{ isPlaying, setIsPlaying }}>
+    <StudyContext.Provider
+      value={{
+        isPlaying,
+        setIsPlaying,
+        showPauseModal,
+        setShowPauseModal,
+        studyDone,
+        setStudyPause,
+      }}
+    >
       {children}
     </StudyContext.Provider>
   );

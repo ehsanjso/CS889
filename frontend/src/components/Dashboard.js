@@ -29,7 +29,7 @@ export const Dashboard = () => {
   return (
     <div className="dashboard">
       <SocketProvider user={user}>
-        <StudyProvider>
+        <StudyProvider user={user}>
           <TrackProvider user={user}>
             <PromptProvider user={user}>
               <Writing localStorageKey="cs889" />

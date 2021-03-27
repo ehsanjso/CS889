@@ -50,13 +50,13 @@ export function PromptProvider({ children, user }) {
     return () => socket.off("receive-prompt");
   }, [socket]);
 
-  function addText(textObject, generalNoteData) {
+  const addText = (textObject, generalNoteData) => {
     socket.emit("update-text", {
       userId: user._id,
       textObject,
       generalNoteData,
     });
-  }
+  };
 
   const initiatePrompt = () => {
     socket.emit("initiate-prompt", {});
