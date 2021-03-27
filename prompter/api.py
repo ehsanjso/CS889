@@ -7,7 +7,8 @@ import flask
 from flask import request, jsonify, render_template
 from cerberus import Validator
 from settings import DefaultConfig
-from stanza_prompter import get_prompt
+from stanza_prompter import get_prompts
+
 
 # Validators for requests
 v = Validator(require_all=True)
@@ -36,7 +37,7 @@ def submit():
     prompt_type = request.form['prompt_type']
     is_story = prompt_type == 'story'
     text = request.form['text']
-    prompts = get_prompt(text, prompt_type, app.config['CORENLP_SERVER'])
+    prompts = get_prompts(text, prompt_type, app.config['CORENLP_SERVER'])
     is_debug = app.config['DEBUG']
     return render_template('index.html', prompts=prompts, input=text, is_story=is_story, s_debug=is_debug)
 
@@ -48,7 +49,7 @@ def get_all_prompts():
         return f'Error: {v.errors}'
     user_text = args['user_text']
     prompt_type = args['prompt_type']
-    prompts = get_prompt(user_text, prompt_type, app.config['CORENLP_SERVER'])
+    prompts = get_prompts(user_text, prompt_type, app.config['CORENLP_SERVER'])
     return jsonify(prompts)
 
 
