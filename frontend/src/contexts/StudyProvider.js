@@ -28,7 +28,10 @@ export function StudyProvider({ children, user }) {
   const [showPauseModal, setShowPauseModal] = useState(false);
   const [pauses, setPauses] = useState(user.pauses);
   const [sec, setSec] = useState(user.studyTime);
+  const [countDown, setCountDown] = useState(3);
+  const [isCountDown, setIsCountDown] = useState(false);
   const didMountRef = useRef(false);
+  let intervalRef = useRef();
 
   const studyTimeLength = 15 * 60;
   const remainingTime = studyTimeLength - sec;
@@ -107,6 +110,26 @@ export function StudyProvider({ children, user }) {
     };
   });
 
+  const decreaseNum = () => setCountDown((prev) => prev - 1);
+
+  useEffect(() => {
+    if (countDown === 0) {
+      setIsPlaying(true);
+      setIsCountDown(false);
+      setCountDown(3);
+      clearInterval(intervalRef.current);
+    }
+  }, [countDown]);
+
+  const handleCountDown = (playing) => {
+    if (playing) {
+      setIsPlaying(false);
+    } else {
+      setIsCountDown(true);
+      intervalRef.current = setInterval(decreaseNum, 1000);
+    }
+  };
+
   useEffect(() => {
     if (socket == null) return;
     socket.on("update-user", updateUser);
@@ -147,6 +170,9 @@ export function StudyProvider({ children, user }) {
         setShowPauseModal,
         studyDone,
         setStudyPause,
+        handleCountDown,
+        countDown,
+        isCountDown,
       }}
     >
       {children}

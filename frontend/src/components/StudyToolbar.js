@@ -8,10 +8,12 @@ export default function StudyToolbar() {
   const {
     isPlaying,
     showPauseModal,
-    setIsPlaying,
     setShowPauseModal,
     setStudyPause,
     studyDone,
+    handleCountDown,
+    countDown,
+    isCountDown,
   } = useStudy();
   const [reason, setReason] = useState(undefined);
 
@@ -26,10 +28,10 @@ export default function StudyToolbar() {
     setReason(reasonValue);
   };
   return (
-    <div className="study-toolbar">
+    <div className={`study-toolbar ${studyDone || !isPlaying ? "active" : ""}`}>
       <Button
         size="large"
-        onClick={() => setIsPlaying((prevIsPlaying) => !prevIsPlaying)}
+        onClick={() => handleCountDown(isPlaying)}
         danger
         type="primary"
         icon={isPlaying ? <PauseOutlined /> : <CaretRightOutlined />}
@@ -70,6 +72,19 @@ export default function StudyToolbar() {
           <a href="#">link</a> and fill the post-study questionnaire.
         </p>
       </Modal>
+
+      <div className="overlay">
+        <div className="overlay-box">
+          {isCountDown ? (
+            <h1 className="count-down">{countDown}</h1>
+          ) : (
+            <>
+              <h1>{studyDone ? "Study is finished!" : "Study is paused!"}</h1>
+              <p>To continue the study click on the play button.</p>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

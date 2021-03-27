@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
     },
     pauses: [
       {
-        reason: { type: String, required: true },
+        reason: { type: String },
         studyTime: {
           type: Number,
           required: true,
