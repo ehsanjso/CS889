@@ -59,7 +59,7 @@ class Character:
     id: int
     person: str
     is_named: bool
-    is_singular: bool
+    num: str
     gender: Gender
     references: List[CharacterReference]
 
@@ -67,7 +67,7 @@ class Character:
         self.id = mention.corefClusterID
         self.is_named = is_named_mention(mention)
         self.person = mention.headString.capitalize() if self.is_named else mention.person
-        self.is_singular = is_singular(mention)
+        self.num = get_num(mention)
         self.gender = get_gender(mention)
         self.references = [CharacterReference(mention, sentences)]
 
@@ -143,8 +143,8 @@ def is_animate(mention) -> bool:
     return mention.animacy == 'ANIMATE'
 
 
-def is_singular(mention) -> bool:
-    return mention.number == 'SINGULAR'
+def get_num(mention) -> str:
+    return 'sing' if mention.number == 'SINGULAR' else 'plur'
 
 
 def is_named_mention(mention) -> bool:
