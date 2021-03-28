@@ -2,6 +2,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Dict
 
+from nltk.corpus import wordnet as wn
+from nltk.corpus.reader.wordnet import WordNetError
+
 
 emotion_list = ['angry', 'irritated', 'enraged', 'annoyed', 'upset', 'resentful', 'incensed', 'infuriated', 'fuming',
                 'indignant', 'disgusted', 'depressed', 'disappointed', 'discouraged', 'ashamed', 'powerless', 'guilty',
@@ -139,8 +142,25 @@ def has_mentions(document) -> bool:
     return len(document.mentionsForCoref) > 0
 
 
-def is_animate(mention) -> bool:
+def is_animate(mention) -> bool:    
+    """
+    if mention.nerString == 'PERSON':
+        return True
+
+    #This is necessary because 'His' and 'Her' can make it this far but aren't nouns
+    isNoun = 'n' in [ss.pos() for ss in wn.synsets(mention.headString)]
+    if isNoun:
+        try:
+            #Check if the mentioned word is of the organism synset
+            isOrganism = wn.synset('organism.n.01') in wn.synset(f'{mention.headString}.n.01').lowest_common_hypernyms(wn.synset('organism.n.01'))
+            return mention.animacy == 'ANIMATE' and isOrganism
+        except WordNetError:
+            print(f'{mention.headString} is not in the wordnet corpus.')
+        
+    return False
+    """
     return mention.animacy == 'ANIMATE'
+
 
 
 def get_num(mention) -> str:
