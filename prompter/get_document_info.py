@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Dict
 
-from nltk.corpus import wordnet as wn
-from nltk.corpus.reader.wordnet import WordNetError
+# from nltk.corpus import wordnet as wn
+# from nltk.corpus.reader.wordnet import WordNetError
 
 
 emotion_list = ['angry', 'irritated', 'enraged', 'annoyed', 'upset', 'resentful', 'incensed', 'infuriated', 'fuming',
