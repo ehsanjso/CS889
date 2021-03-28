@@ -2,6 +2,7 @@ const R = require("ramda");
 const axios = require("axios");
 const Text = require("../models/text");
 const OldText = require("../models/oldText");
+const Prompt = require("../models/prompts");
 const User = require("../models/users");
 
 const host = "http://165.227.42.195:5000";
@@ -40,19 +41,50 @@ module.exports = function (socket, io) {
     await newText.save();
   });
 
-  socket.on("initiate-prompt", async ({ text }) => {
+  socket.on("initiate-prompt", async ({ text, userId }) => {
     try {
+      // const { data } = await axios.get(
+      //   encodeURI(
+      //     `${host}/api/get_all_prompts?user_text=${text}&prompt_type=story`
+      //   )
+      // );
+
       const { data } = await axios.get(
         encodeURI(
-          `${host}/api/get_all_prompts?user_text=${text}&prompt_type=story`
+          `${host}/api/get_next_prompt?user_text=${text}&prompt_type=story&user_id=${userId}`
         )
       );
-      io.to(socketId).emit("receive-prompt", data);
+
+      if (!R.isEmpty(data)) {
+        const newPrompt = {
+          isActive: true,
+          user: userId,
+          question: data.prompt_text,
+          startIdx: data.start_idx,
+          endIdx: data.end_idx,
+          hasStar: false,
+          character: data.character,
+          deleted: false,
+        };
+
+        const prompt = new Prompt(newPrompt);
+        prompt.save();
+
+        io.to(socketId).emit("receive-prompt", prompt);
+      }
+
       io.to(socketId).emit("change-loading", false);
     } catch (e) {
       console.log(e);
       io.to(socketId).emit("change-loading", false);
     }
+  });
+
+  socket.on("update-prompt-feedback", async ({ promptId, hasStar }) => {
+    const prompt = await Prompt.findById(promptId);
+    prompt.hasStar = hasStar;
+    await prompt.save();
+    io.to(socketId).emit("update-prompt", prompt);
   });
 
   socket.on("update-study-time", async ({ userId, studyTime }) => {

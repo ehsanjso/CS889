@@ -23,6 +23,8 @@ export function PromptProvider({ children, user }) {
   const [textData, setTextData] = useState();
   const [generalNoteData, setGeneralNoteData] = useState();
 
+  console.log(prompts);
+
   useEffect(() => {
     async function getText() {
       const { data } = await axios.get(`${host}/text/${user["_id"]}`);
@@ -53,11 +55,29 @@ export function PromptProvider({ children, user }) {
     console.log(noteObject);
   };
 
+  const updatePromptFeedback = (hasStar, promptId) => {
+    socket.emit("update-prompt-feedback", {
+      hasStar,
+      promptId,
+    });
+  };
+
   const addPrompt = (prompt) => {
     setPrompts((prevPrompts) => {
       const prompts = prevPrompts ? [...prevPrompts] : [];
       prompts.push(prompt);
       return prompts;
+    });
+  };
+
+  const updatePrompt = (prompt) => {
+    setPrompts((prevDiscussions) => {
+      return prevDiscussions.map((el) => {
+        if (el["_id"] === prompt["_id"]) {
+          return prompt;
+        }
+        return el;
+      });
     });
   };
 
@@ -73,6 +93,7 @@ export function PromptProvider({ children, user }) {
     if (socket == null) return;
     socket.on("receive-prompt", addPrompt);
     socket.on("change-loading", changeLoading);
+    socket.on("update-prompt", updatePrompt);
     return () => socket.off("receive-prompt");
   }, [socket]);
 
@@ -86,7 +107,10 @@ export function PromptProvider({ children, user }) {
 
   const initiatePrompt = () => {
     dispatch(changeFetchInProg(true));
-    socket.emit("initiate-prompt", { text: serialize(textData) });
+    socket.emit("initiate-prompt", {
+      text: serialize(textData),
+      userId: user._id,
+    });
   };
 
   return (
@@ -99,6 +123,7 @@ export function PromptProvider({ children, user }) {
         updatePromptNote,
         askForPrompt,
         prompts,
+        updatePromptFeedback,
       }}
     >
       {children}

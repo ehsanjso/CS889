@@ -6,14 +6,26 @@ const promptSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    deleted: {
+      type: Boolean,
+      required: true,
+    },
     question: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    deleted: {
-      type: Boolean,
+    character: {
+      type: String,
+      required: true,
+    },
+    startIdx: {
+      type: Number,
+      required: true,
+    },
+    endIdx: {
+      type: Number,
       required: true,
     },
     hasStar: {
@@ -22,7 +34,6 @@ const promptSchema = new mongoose.Schema(
     },
     note: {
       type: String,
-      required: true,
     },
   },
   {
