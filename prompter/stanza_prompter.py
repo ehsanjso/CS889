@@ -9,7 +9,7 @@ import random
 def get_prompts(text, prompt_type, show_all=True, server='localhost'):
     with CoreNLPClient(endpoint=f'http://{server}:9000',
                        start_server=StartServer.DONT_START,
-                       annotators=['coref', 'openie', 'parse']) as client:
+                       annotators=['coref', 'openie']) as client:
         document = client.annotate(text)
         document_info = DocumentInfo(document)
         all_questions = get_all_questions(document_info, prompt_type)
