@@ -9,11 +9,6 @@ from sql_layer import SqlLayer
 SUGGESTED_PROMPTS_FOR_USER = {}
 SUGGESTED_PROMPT_TEXTS_FOR_USER = {}
 
-
-def storable_question(question):
-    return f"{question['character']} - {question['prompt_text']}"
-
-
 def get_next_question_sql(user_id, all_questions):    
     sql = SqlLayer('prompt_history.db')
     sql_user = sql.addUser(user_id)
@@ -48,6 +43,9 @@ def get_next_question_sql(user_id, all_questions):
             "character":character,
             "prompt_text":prompt_text
         }
+
+def storable_question(question):
+    return f"{question['character']} - {question['prompt_text']}"
 
 def get_next_question(user_id, all_questions):
 
