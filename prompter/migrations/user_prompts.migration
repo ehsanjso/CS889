@@ -1,0 +1,7 @@
+CREATE TABLE user_prompts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    prompt_id INTEGER,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(prompt_id) REFERENCES prompts(id)
+);

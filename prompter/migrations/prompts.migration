@@ -1,0 +1,5 @@
+CREATE TABLE prompts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character TEXT NOT NULL,
+    question TEXT NOT NULL
+);
