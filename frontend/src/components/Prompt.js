@@ -25,7 +25,9 @@ export default function Prompt({ prompt }) {
       <div className="prompt-note">
         <Writing
           noToolbar={true}
-          localStorageKey={`${prompt._id}-prompt-notes`}
+          storageKey={`${prompt._id}-prompt-notes`}
+          promptId={prompt._id}
+          text={prompt.note}
         />
       </div>
     </div>

@@ -80,6 +80,16 @@ module.exports = function (socket, io) {
     }
   });
 
+  socket.on("update-prompt-note", async ({ promptId, noteObject }) => {
+    const prompt = await Prompt.findById(promptId);
+    const rawNote = JSON.stringify(noteObject);
+
+    prompt.note = rawNote;
+    await prompt.save();
+
+    io.to(socketId).emit("update-prompt", prompt);
+  });
+
   socket.on("update-prompt-feedback", async ({ promptId, hasStar }) => {
     const prompt = await Prompt.findById(promptId);
     prompt.hasStar = hasStar;

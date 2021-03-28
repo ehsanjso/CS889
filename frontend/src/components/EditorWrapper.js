@@ -22,9 +22,9 @@ const HOTKEYS = {
   "mod+h": "highlight",
 };
 
-const EditorWrapper = ({ noToolbar, localStorageKey }) => {
+const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
   const [value, setValue] = useState(
-    JSON.parse(localStorage.getItem(`${localStorageKey}-content`)) || [
+    text || [
       {
         type: "paragraph",
         children: [{ text: "" }],
@@ -38,19 +38,23 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const didMount = useRef(false);
 
   const debouncedFetch = useMemo(() => {
-    if (localStorageKey.includes("prompt-notes")) {
+    if (storageKey.includes("prompt-notes")) {
       return debounce(updatePromptNote, 1000);
-    } else if (localStorageKey.includes("notes")) {
+    } else if (storageKey.includes("notes")) {
       return debounce(updateGeneralNote, 1000);
     } else {
       return debounce(updateText, 1000);
     }
-  }, [updatePromptNote, updateGeneralNote, updateText, localStorageKey]);
+  }, [updatePromptNote, updateGeneralNote, updateText, storageKey]);
 
   // useDebounce;
   useEffect(() => {
     if (didMount.current) {
-      debouncedFetch(value, localStorageKey);
+      if (promptId) {
+        debouncedFetch(value, storageKey, promptId);
+      } else {
+        debouncedFetch(value, storageKey);
+      }
     } else {
       didMount.current = true;
     }
@@ -63,8 +67,6 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
       value={value}
       onChange={(value) => {
         setValue(value);
-        const content = JSON.stringify(value);
-        localStorage.setItem(`${localStorageKey}-content`, content);
       }}
     >
       {!noToolbar && <Controls />}

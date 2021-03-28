@@ -22,23 +22,34 @@ export function PromptProvider({ children, user }) {
   const [prompts, setPrompts] = useState([]);
   const [textData, setTextData] = useState();
   const [generalNoteData, setGeneralNoteData] = useState();
-
-  console.log(prompts);
-
-  useEffect(() => {
-    async function getText() {
-      const { data } = await axios.get(`${host}/text/${user["_id"]}`);
-      setTextData(JSON.parse(data[0].text));
-    }
-    getText();
-  }, []);
+  const [initiated, setInitiated] = useState(false);
 
   useEffect(() => {
-    async function getPrompts() {
-      const { data } = await axios.get(`${host}/prompts/${user["_id"]}`);
-      setPrompts(data);
+    async function getData() {
+      dispatch(changeFetchInProg(true));
+
+      const textRes = await axios.get(`${host}/text/${user["_id"]}`);
+      const text = textRes.data[0].text
+        ? JSON.parse(textRes.data[0].text)
+        : undefined;
+      const generalNote = textRes.data[0].note
+        ? JSON.parse(textRes.data[0].note)
+        : undefined;
+      setTextData(text);
+      setGeneralNoteData(generalNote);
+      const promptRes = await axios.get(`${host}/prompts/${user["_id"]}`);
+      const finalData = promptRes.data.map((el) => {
+        const note = el.note ? JSON.parse(el.note) : undefined;
+        return {
+          ...el,
+          note,
+        };
+      });
+      setPrompts(finalData);
+      dispatch(changeFetchInProg(false));
+      setInitiated(true);
     }
-    getPrompts();
+    getData();
   }, []);
 
   const updateText = (textObject) => {
@@ -50,9 +61,11 @@ export function PromptProvider({ children, user }) {
     setGeneralNoteData(noteObject);
   };
 
-  const updatePromptNote = (noteObject) => {
-    console.log("updatePromptNote");
-    console.log(noteObject);
+  const updatePromptNote = (noteObject, localStorageKey, promptId) => {
+    socket.emit("update-prompt-note", {
+      noteObject,
+      promptId,
+    });
   };
 
   const updatePromptFeedback = (hasStar, promptId) => {
@@ -74,7 +87,7 @@ export function PromptProvider({ children, user }) {
     setPrompts((prevDiscussions) => {
       return prevDiscussions.map((el) => {
         if (el["_id"] === prompt["_id"]) {
-          return prompt;
+          return { ...prompt, note: JSON.parse(prompt.note) };
         }
         return el;
       });
@@ -124,6 +137,9 @@ export function PromptProvider({ children, user }) {
         askForPrompt,
         prompts,
         updatePromptFeedback,
+        textData,
+        generalNoteData,
+        initiated,
       }}
     >
       {children}
