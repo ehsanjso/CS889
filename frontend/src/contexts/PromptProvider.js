@@ -18,6 +18,22 @@ export function PromptProvider({ children, user }) {
   const [generalNoteData, setGeneralNoteData] = useState();
   const socket = useSocket();
 
+  useEffect(() => {
+    async function getText() {
+      const { data } = await axios.get(`${host}/text/${user["_id"]}`);
+      setTextData(JSON.parse(data[0].text));
+    }
+    getText();
+  }, []);
+
+  useEffect(() => {
+    async function getPrompts() {
+      const { data } = await axios.get(`${host}/prompts/${user["_id"]}`);
+      setPrompts(data);
+    }
+    getPrompts();
+  }, []);
+
   const updateText = (textObject) => {
     setTextData(textObject);
     addText(textObject, generalNoteData);
@@ -59,7 +75,7 @@ export function PromptProvider({ children, user }) {
   };
 
   const initiatePrompt = () => {
-    socket.emit("initiate-prompt", {});
+    socket.emit("initiate-prompt", { textObject: textData });
   };
 
   return (

@@ -6,6 +6,8 @@ const cors = require("cors");
 
 const mongoose = require("./db/mongoose");
 const userRouter = require("./routers/user");
+const textRouter = require("./routers/text");
+const promptRouter = require("./routers/prompt");
 const { adminBro, adminRouter } = require("./routers/admin");
 
 const app = express();
@@ -19,6 +21,8 @@ app.use(adminBro.options.rootPath, adminRouter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(userRouter);
+app.use(textRouter);
+app.use(promptRouter);
 
 const server = http.createServer(app);
 const io = socketio(server, {

@@ -1,4 +1,5 @@
 const R = require("ramda");
+const axios = require("axios");
 const Text = require("../models/text");
 const OldText = require("../models/oldText");
 const User = require("../models/users");
@@ -37,7 +38,9 @@ module.exports = function (socket, io) {
     await newText.save();
   });
 
-  socket.on("initiate-prompt", async ({}) => {
+  socket.on("initiate-prompt", async ({ textObject }) => {
+    console.log(textObject);
+    console.log(serialize(textObject));
     io.to(socketId).emit("receive-prompt", {
       _id: 11111,
       question: "What you doing man? Come on?",
@@ -70,4 +73,15 @@ module.exports = function (socket, io) {
   socket.on("disconnect", () => {
     console.log("disconnected");
   });
+};
+
+// Define a serializing function that takes a value and returns a string.
+const serialize = (value) => {
+  return (
+    value
+      // Return the string content of each paragraph in the value's children.
+      .map((n) => Node.string(n))
+      // Join them all with line breaks denoting paragraphs.
+      .join("\n")
+  );
 };
