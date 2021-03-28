@@ -6,7 +6,10 @@ import sqlite3
 class SqlLayer:
     def __init__(self,db_name):
         self.db = db_name
-
+        try:
+            self.createDatabase('./migrations')
+        except:
+            print('Tables already exist.')
     ###
     #  Table creation, only run one time. There's no error handling for when tables already exists :^)
     ###
@@ -68,7 +71,7 @@ class SqlLayer:
     def getPromptById(self, prompt_id):
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
-            rs = cursor.execute('SELECT * FROM prompts WHERE prompt_id = ?', (prompt_id,))
+            rs = cursor.execute('SELECT * FROM prompts WHERE id = ?', (prompt_id,))
             return cursor.fetchone()
 
     ###
@@ -98,46 +101,7 @@ class SqlLayer:
             cursor = conn.cursor()
             query_params = ','.join(['?'] * len(prompt_ids))
             query = f'SELECT * FROM user_prompts WHERE user_id=? AND prompt_id in ({query_params})'
-            args = prompt_ids
+            args = prompt_ids.copy()
             args.insert(0,user_id)
             rs = cursor.execute(query, args)
             return cursor.fetchall()
-
-
-sql = SqlLayer('prompt_history.db')
-
-#sql.createDatabase('./migrations')
-
-user = sql.addUser('Brian')
-user_test = sql.checkUserExists('Brian')
-print('User Create',user)
-print('User Valid',user_test)
-
-prompt = sql.addPrompt('Brian', 'Why does he go to the store?')
-print('Prompt Create',prompt)
-prompt_valid = sql.checkPromptExists('Brian', 'Why does he go to the store?')
-print('Prompt Valid',prompt_valid)
-
-prompt_invalid = sql.checkPromptExists('Brian', 'Why does he go to the restroom?')
-print('Prompt Invalid', prompt_invalid)
-
-
-#user = sql.addUser('Steve')
-prompt_id,_,_ = prompt
-user_id,_ = user
-
-character = 'Testcity'
-prompts = ['Why does he go to the store?', 'Why does he go to the restroom?','Why does he go to the hotel?','Why does he go to CS889?']
-prompt_ids = []
-for prompt in prompts:
-    prompt_id,_,_ = sql.addPrompt(character, prompt)
-    prompt_ids.append(prompt_id)
-
-#print(prompt_ids)
-
-user_prompt = sql.addUserPrompt(user_id,4)
-
-used_prompt_ids = [prompt_id for (tc,p,prompt_id) in sql.getUserPrompts(user_id, prompt_ids)]
-unused_prompt_ids = list(set(prompt_ids).difference(used_prompt_ids))
-
-print(unused_prompt_ids)
