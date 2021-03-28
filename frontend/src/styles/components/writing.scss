@@ -8,7 +8,6 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  
 }
 
 .editor {
@@ -19,7 +18,7 @@
 
 .note-btn {
   position: absolute;
-  right: 0;
+  left: 0;
   padding: 10px;
   background: #fff;
   color: #6554c0;
@@ -29,15 +28,16 @@
   justify-content: center;
   align-items: center;
   top: 50%;
-  border-radius: 10px 0 0 10px;
+  border-radius: 0 10px 10px 0;
   transition: 0.3s all ease;
   cursor: pointer;
-  box-shadow: -6px 2px 4px 0 rgba(0, 0, 0, 0.2);
-  z-index: 99999;
+  box-shadow: 6px 2px 4px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
 
   &.active {
-    right: 500px;
+    left: 500px;
     animation: antdDrawerFadeIn 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+    background: #faf9ff;
   }
 }
 
@@ -45,7 +45,7 @@
   border-radius: 2px 2px 0 0;
   padding: 0 2px;
   border-bottom: 3px solid $primary;
-  transition: .4s all ease;
+  transition: 0.4s all ease;
 
   &.selected {
     background: #e7e2fd;

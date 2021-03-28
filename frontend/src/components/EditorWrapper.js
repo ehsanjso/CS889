@@ -1,5 +1,11 @@
 // Import React dependencies.
-import React, { useCallback, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, Slate } from "slate-react";
 import { Editor, createEditor } from "slate";
@@ -16,9 +22,9 @@ const HOTKEYS = {
   "mod+h": "highlight",
 };
 
-const EditorWrapper = ({ noToolbar, localStorageKey }) => {
+const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
   const [value, setValue] = useState(
-    JSON.parse(localStorage.getItem(`${localStorageKey}-content`)) || [
+    text || [
       {
         type: "paragraph",
         children: [{ text: "" }],
@@ -28,6 +34,32 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const { updateText, updateGeneralNote, updatePromptNote } = usePrompt();
+  const didMount = useRef(false);
+
+  const debouncedFetch = useMemo(() => {
+    if (storageKey.includes("prompt-notes")) {
+      return debounce(updatePromptNote, 1000);
+    } else if (storageKey.includes("notes")) {
+      return debounce(updateGeneralNote, 1000);
+    } else {
+      return debounce(updateText, 1000);
+    }
+  }, [updatePromptNote, updateGeneralNote, updateText, storageKey]);
+
+  // useDebounce;
+  useEffect(() => {
+    if (didMount.current) {
+      if (promptId) {
+        debouncedFetch(value, storageKey, promptId);
+      } else {
+        debouncedFetch(value, storageKey);
+      }
+    } else {
+      didMount.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return (
     <Slate
@@ -35,8 +67,6 @@ const EditorWrapper = ({ noToolbar, localStorageKey }) => {
       value={value}
       onChange={(value) => {
         setValue(value);
-        const content = JSON.stringify(value);
-        localStorage.setItem(`${localStorageKey}-content`, content);
       }}
     >
       {!noToolbar && <Controls />}
@@ -146,6 +176,29 @@ const Leaf = ({ attributes, children, leaf }) => {
       {children}
     </span>
   );
+};
+
+const debounce = (func, delay) => {
+  let debounceHandler;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceHandler);
+    debounceHandler = setTimeout(() => func.apply(context, args), delay);
+  };
+};
+
+const throttle = (func, limit) => {
+  let inThrottle;
+  return function () {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
 };
 
 export default EditorWrapper;

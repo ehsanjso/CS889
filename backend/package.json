@@ -12,7 +12,9 @@
   "dependencies": {
     "@admin-bro/express": "^3.1.0",
     "@admin-bro/mongoose": "^1.1.0",
+    "@react-hook/throttle": "^2.2.0",
     "admin-bro": "^3.4.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -22,6 +24,7 @@
     "mongoose": "^5.11.19",
     "ramda": "^0.27.1",
     "socket.io": "^3.1.2",
+    "throttle-debounce": "^3.0.1",
     "tslib": "^2.1.0",
     "validator": "^13.5.2"
   },

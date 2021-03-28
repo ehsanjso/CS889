@@ -39,6 +39,26 @@ const userSchema = new mongoose.Schema(
     logData: {
       type: Boolean,
     },
+    studyMode: {
+      type: Boolean,
+    },
+    studyTime: {
+      type: Number,
+      required: true,
+    },
+    pauses: [
+      {
+        reason: { type: String },
+        studyTime: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    isStudyDone: {
+      type: Boolean,
+      required: true,
+    },
     tokens: [
       {
         token: {
@@ -53,16 +73,16 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("comments", {
-  ref: "Comment",
+userSchema.virtual("text", {
+  ref: "Text",
   localField: "_id",
-  foreignField: "author",
+  foreignField: "user",
 });
 
-userSchema.virtual("projects", {
-  ref: "Video",
+userSchema.virtual("prompts", {
+  ref: "Prompt",
   localField: "_id",
-  foreignField: "participants",
+  foreignField: "user",
 });
 
 userSchema.methods.toJSON = function () {

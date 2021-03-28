@@ -8,3 +8,25 @@
   justify-content: center;
   align-items: flex-start;
 }
+
+.ant-drawer-header {
+  background: rgba(231, 226, 253, 0.2);
+}
+
+.ant-drawer-body {
+  background: rgba(231, 226, 253, 0.2);
+  .writing {
+    width: 100%;
+    padding: 0;
+
+    .editor {
+      min-width: 100%;
+      width: 100%;
+      font-size: 19px;
+      // border-radius: 10px;
+      // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      padding: 10px 20px;
+      // border-top: 1px solid #e2e4eb;
+    }
+  }
+}
