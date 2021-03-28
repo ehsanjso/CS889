@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema(
     logData: {
       type: Boolean,
     },
+    studyMode: {
+      type: Boolean,
+    },
     studyTime: {
       type: Number,
       required: true,

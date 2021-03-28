@@ -54,7 +54,7 @@ export const Dashboard = () => {
                 <FileTextOutlined />
               </div>
 
-              <StudyToolbar />
+              {user.studyMode && <StudyToolbar />}
             </PromptProvider>
           </TrackProvider>
         </StudyProvider>
