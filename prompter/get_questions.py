@@ -1,6 +1,7 @@
 from get_document_info import Character, CharacterReference, DocumentInfo
 from general_question_templates import GENERAL_QUESTIONS
 from emotion_question_templates import EMOTION_QUESTIONS, TMP_EMOTION
+import random
 
 
 def get_question_info(prompt_text: str, ref: CharacterReference) -> dict:
@@ -37,7 +38,7 @@ def get_emotion_character_questions(characters: dict, character_refs: dict, prom
     return emotion_questions
 
 
-def get_all_questions(document_info: DocumentInfo, prompt_type: str) -> list:
+def get_all_questions(document_info: DocumentInfo, prompt_type: str) -> list[dict]:
     characters = document_info.chars
     char_refs = document_info.char_ref_for_loc
 
@@ -45,3 +46,8 @@ def get_all_questions(document_info: DocumentInfo, prompt_type: str) -> list:
     emotion_questions = get_emotion_character_questions(characters, char_refs, prompt_type)
 
     return general_questions + emotion_questions
+
+
+def get_next_question(document_info: DocumentInfo, prompt_type: str) -> dict:
+    all_questions = get_all_questions(document_info, prompt_type)
+    return random.choice(all_questions)

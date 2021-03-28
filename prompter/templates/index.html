@@ -5,16 +5,23 @@
     <title>Prompter</title>
 </head>
 <body>
-    <h1>Prompter</h1>
-    <p>Debug: {{is_debug}}</p>
-
+    <h1>Prompter (Debug: {{is_debug}}) </h1>
 
     <form action="{{ url_for('submit') }}" method="POST">
-        <div>Prompt Type (Default = Story):</div>
+        <span><b>Prompt Type:</b></span>
         <input type="radio" name="prompt_type" id="story" value="story"
-               {% if is_story %} checked {% endif %}> Story </input><br>
+               {% if is_story %} checked {% endif %}> Story </input>
         <input type="radio" name="prompt_type" id="reader" value="reader"
                {% if not is_story %} checked {% endif %}> Reader </input><br><br>
+
+        <span><b>API Type:</b></span>
+        <input type="radio" name="api_type" id="all_prompts" value="all_prompts"
+               {% if show_all_prompts %} checked {% endif %}> All Prompts </input>
+        <input type="radio" name="api_type" id="next_prompt" value="next_prompt"
+               {% if not show_all_prompts %} checked {% endif %}> Next Prompt </input><br><br>
+
+        <div>User ID (required for "Next Prompt" option): </div>
+        <input name="user_id" value={{user_id}}><br><br>
 
         <div>Input some text: </div>
         <textarea style="width: 80%" name="text">{{input}}</textarea><br><br>
