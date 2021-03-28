@@ -4,6 +4,8 @@ const Text = require("../models/text");
 const OldText = require("../models/oldText");
 const User = require("../models/users");
 
+const host = "http://165.227.42.195:5000";
+
 module.exports = function (socket, io) {
   const socketId = socket.handshake.query.socketId;
   socket.join(socketId);
@@ -38,13 +40,19 @@ module.exports = function (socket, io) {
     await newText.save();
   });
 
-  socket.on("initiate-prompt", async ({ textObject }) => {
-    console.log(textObject);
-    console.log(serialize(textObject));
-    io.to(socketId).emit("receive-prompt", {
-      _id: 11111,
-      question: "What you doing man? Come on?",
-    });
+  socket.on("initiate-prompt", async ({ text }) => {
+    try {
+      const { data } = await axios.get(
+        encodeURI(
+          `${host}/api/get_all_prompts?user_text=${text}&prompt_type=story`
+        )
+      );
+      io.to(socketId).emit("receive-prompt", data);
+      io.to(socketId).emit("change-loading", false);
+    } catch (e) {
+      console.log(e);
+      io.to(socketId).emit("change-loading", false);
+    }
   });
 
   socket.on("update-study-time", async ({ userId, studyTime }) => {
@@ -73,15 +81,4 @@ module.exports = function (socket, io) {
   socket.on("disconnect", () => {
     console.log("disconnected");
   });
-};
-
-// Define a serializing function that takes a value and returns a string.
-const serialize = (value) => {
-  return (
-    value
-      // Return the string content of each paragraph in the value's children.
-      .map((n) => Node.string(n))
-      // Join them all with line breaks denoting paragraphs.
-      .join("\n")
-  );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Writing from "./Writing";
 import Prompts from "./Prompts";
+import Loading from "./Loading";
 import { Drawer } from "antd";
 import {
   FileTextOutlined,
@@ -18,6 +19,7 @@ import "../styles/components/dashboard.scss";
 export const Dashboard = () => {
   const [visible, setVisible] = useState(false);
   const user = useSelector((state) => state.auth);
+  const fetchInProgress = useSelector((state) => state.fetchInProgress);
 
   const toggleDrawer = () => {
     setVisible((prevState) => !prevState);
@@ -55,6 +57,7 @@ export const Dashboard = () => {
               </div>
 
               {user.studyMode && <StudyToolbar />}
+              {fetchInProgress && <Loading />}
             </PromptProvider>
           </TrackProvider>
         </StudyProvider>

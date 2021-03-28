@@ -1,9 +1,12 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import * as R from "ramda";
 import { message } from "antd";
+import { Node } from "slate";
 import axios from "axios";
 import { useSocket } from "./SocketProvider";
 import { host } from "../actions/consts/host";
+import { useDispatch } from "react-redux";
+import { changeFetchInProg } from "../actions/fetchInProgress";
 
 const PromptContext = React.createContext();
 
@@ -12,11 +15,13 @@ export function usePrompt() {
 }
 
 export function PromptProvider({ children, user }) {
+  const socket = useSocket();
+  const dispatch = useDispatch();
+
   const [activePrompt, setActivePrompt] = useState(undefined);
   const [prompts, setPrompts] = useState([]);
   const [textData, setTextData] = useState();
   const [generalNoteData, setGeneralNoteData] = useState();
-  const socket = useSocket();
 
   useEffect(() => {
     async function getText() {
@@ -56,6 +61,10 @@ export function PromptProvider({ children, user }) {
     });
   };
 
+  const changeLoading = (loadState) => {
+    dispatch(changeFetchInProg(loadState));
+  };
+
   const askForPrompt = () => {
     initiatePrompt();
   };
@@ -63,6 +72,7 @@ export function PromptProvider({ children, user }) {
   useEffect(() => {
     if (socket == null) return;
     socket.on("receive-prompt", addPrompt);
+    socket.on("change-loading", changeLoading);
     return () => socket.off("receive-prompt");
   }, [socket]);
 
@@ -75,7 +85,8 @@ export function PromptProvider({ children, user }) {
   };
 
   const initiatePrompt = () => {
-    socket.emit("initiate-prompt", { textObject: textData });
+    dispatch(changeFetchInProg(true));
+    socket.emit("initiate-prompt", { text: serialize(textData) });
   };
 
   return (
@@ -94,3 +105,14 @@ export function PromptProvider({ children, user }) {
     </PromptContext.Provider>
   );
 }
+
+// Define a serializing function that takes a value and returns a string.
+const serialize = (value) => {
+  return (
+    value
+      // Return the string content of each paragraph in the value's children.
+      .map((n) => Node.string(n))
+      // Join them all with line breaks denoting paragraphs.
+      .join("\n")
+  );
+};

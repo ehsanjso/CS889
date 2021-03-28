@@ -8,9 +8,10 @@
   align-items: center;
   //   width: 350px;
   width: 600px;
-  position: relative;
   //   box-shadow: 0 -25px 56px 0 rgba(96, 101, 123, 0.05);
   flex-direction: column;
+  position: sticky;
+  top: 0;
 }
 
 .prompt-inner {
