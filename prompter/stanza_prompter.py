@@ -4,6 +4,8 @@ from get_questions import get_all_questions
 from copy import deepcopy
 import random
 
+from sql_layer import SqlLayer
+
 SUGGESTED_PROMPTS_FOR_USER = {}
 SUGGESTED_PROMPT_TEXTS_FOR_USER = {}
 
@@ -13,6 +15,31 @@ def storable_question(question):
 
 
 def get_next_question(user_id, all_questions):
+    print(user_id)
+    sql = SqlLayer('prompt_history.db')
+    sql_user = sql.addUser(user_id)
+
+    prompt_ids = []
+    for prompt in all_questions:
+        prompt_id,_,_ = sql.addPrompt(prompt['character'], prompt['prompt_text'])
+    
+    used_prompt_ids = [prompt_id for (tc,p,prompt_id) in sql.getUserPrompts(user_id, prompt_ids)]
+    unused_prompt_ids = list(set(prompt_ids).difference(used_prompt_ids))
+    random_prompt_id = random.choice(unused_prompt_ids)
+
+    prompt = sql.getPromptById(random_prompt_id)
+
+    if prompt == None:
+        return {}
+    else:
+        prompt_id,character,prompt_text = prompt
+        return {
+            "character":character,
+            "prompt_text":prompt_text
+        }
+    
+    """
+
     if user_id not in SUGGESTED_PROMPTS_FOR_USER:
         SUGGESTED_PROMPTS_FOR_USER[user_id] = []
         SUGGESTED_PROMPT_TEXTS_FOR_USER[user_id] = []
@@ -34,6 +61,7 @@ def get_next_question(user_id, all_questions):
         return question
 
     return {}  # TODO: change this?
+    """
 
 
 # NOTES:
