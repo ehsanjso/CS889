@@ -45,7 +45,7 @@ def submit():
     show_all_prompts = api_type == 'all_prompts'
     user_id = request.form['user_id']
     text = request.form['text']
-    prompts = get_prompts(text, prompt_type, show_all=show_all_prompts, server=app.config['CORENLP_SERVER'])
+    prompts = get_prompts(text, prompt_type, user_id, show_all=show_all_prompts, server=app.config['CORENLP_SERVER'])
     prompts = prompts if show_all_prompts else [prompts]
     return render_template('index.html', prompts=prompts, input=text, is_story=is_story,
                            show_all_prompts=show_all_prompts, user_id=user_id, is_debug=is_debug)
@@ -70,7 +70,7 @@ def get_next_prompt():
     user_id = args['user_id']
     user_text = args['user_text']
     prompt_type = args['prompt_type']
-    prompt = get_prompts(user_text, prompt_type, show_all=False, server=app.config['CORENLP_SERVER'])
+    prompt = get_prompts(user_text, prompt_type, user_id, show_all=False, server=app.config['CORENLP_SERVER'])
     return jsonify(prompt)
 
 
