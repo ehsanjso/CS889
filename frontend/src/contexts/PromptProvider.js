@@ -32,14 +32,18 @@ export function PromptProvider({ children, user }) {
       dispatch(changeFetchInProg(true));
 
       const textRes = await axios.get(`${host}/text/${user["_id"]}`);
-      const text = textRes.data[0].text
-        ? JSON.parse(textRes.data[0].text)
-        : undefined;
-      const generalNote = textRes.data[0].note
-        ? JSON.parse(textRes.data[0].note)
-        : undefined;
-      setTextData(text);
-      setGeneralNoteData(generalNote);
+      if (!R.isEmpty(textRes.data)) {
+        const text = textRes.data[0].text
+          ? JSON.parse(textRes.data[0].text)
+          : undefined;
+        const generalNote = textRes.data[0].note
+          ? JSON.parse(textRes.data[0].note)
+          : undefined;
+
+        setTextData(text);
+        setGeneralNoteData(generalNote);
+      }
+
       const promptRes = await axios.get(`${host}/prompts/${user["_id"]}`);
       const finalData = promptRes.data.map((el) => {
         const note = el.note ? JSON.parse(el.note) : undefined;
