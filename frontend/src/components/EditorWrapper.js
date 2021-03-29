@@ -72,20 +72,27 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
   const decorate = useCallback(
     ([node, path]) => {
       const ranges = [];
+      const tempRanges = [];
+      for (let j = 0; j < prompts.length; j++) {
+        tempRanges[j] = [];
+      }
 
       if (!R.isEmpty(prompts)) {
-        prompts.forEach((prompt) => {
+        prompts.forEach((prompt, index) => {
           const character = prompt.character;
-          const tempRanges = [];
 
           if (character && Text.isText(node)) {
             const { text } = node;
+            // console.log("/////////////////////////////");
+            // console.log(node);
+            // console.log(character);
+            // console.log(text);
             const parts = text.split(character);
             let offset = 0;
 
             parts.forEach((part, i) => {
               if (i !== 0) {
-                tempRanges.push({
+                tempRanges[index].push({
                   anchor: { path, offset: offset - character.length },
                   focus: { path, offset },
                   highlight: true,
@@ -96,18 +103,20 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
               offset = offset + part.length + character.length;
             });
           }
-          tempRanges.sort((a, b) => {
-            return (
-              Math.abs(prompt.startIdx - a.anchor.offset) -
-              Math.abs(prompt.startIdx - b.anchor.offset)
-            );
-          });
-
-          if (!R.isEmpty(tempRanges)) {
-            ranges.push(tempRanges[0]);
-          }
         });
       }
+
+      tempRanges.forEach((element) => {
+        element.sort((a, b) => {
+          return (
+            Math.abs(prompt.startIdx - a.anchor.offset) -
+            Math.abs(prompt.startIdx - b.anchor.offset)
+          );
+        });
+        if (!R.isEmpty(element)) {
+          ranges.push(element[0]);
+        }
+      });
 
       return ranges;
     },
