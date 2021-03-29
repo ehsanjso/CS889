@@ -4,6 +4,7 @@ const AdminBroMongoose = require("@admin-bro/mongoose");
 const User = require("../models/users");
 const Text = require("../models/text");
 const Prompt = require("../models/prompts");
+const Log = require("../models/logs");
 
 const sidebarGroups = {
   user: {
@@ -16,6 +17,10 @@ const sidebarGroups = {
   },
   prompts: {
     name: "Prompts Management",
+    icon: "User",
+  },
+  logs: {
+    name: "Logs Management",
     icon: "User",
   },
 };
@@ -39,6 +44,12 @@ const adminBro = new AdminBro({
       resource: Prompt,
       options: {
         parent: sidebarGroups.prompts,
+      },
+    },
+    {
+      resource: Log,
+      options: {
+        parent: sidebarGroups.logs,
       },
     },
   ],

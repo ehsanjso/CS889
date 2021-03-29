@@ -13,7 +13,7 @@ services:
     depends_on:
       - cs889_backend
     environment:
-      - APP_CONFIG_API_URL=//localhost:8080
+      - APP_CONFIG_API_URL=//159.89.49.170/:8080
   cs889_backend:
     container_name: cs889_backend
     restart: always
@@ -31,7 +31,7 @@ services:
       - mongo
     environment:
       - MONGO_URL=mongo:27017/cs889
-      - ADMIN_URL=//localhost:8080
+      - ADMIN_URL=//159.89.49.170/:8080
       - PORT=8888
   mongo:
     container_name: mongo
