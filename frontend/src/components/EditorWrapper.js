@@ -123,7 +123,7 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
 
   return (
     <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-      {!noToolbar && <Controls />}
+      {/* {!noToolbar && <Controls />} */}
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
