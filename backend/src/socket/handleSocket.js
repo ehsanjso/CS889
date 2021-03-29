@@ -4,6 +4,7 @@ const Text = require("../models/text");
 const OldText = require("../models/oldText");
 const Prompt = require("../models/prompts");
 const User = require("../models/users");
+const Log = require("../models/logs");
 
 const host = "http://165.227.42.195:5000";
 
@@ -118,7 +119,10 @@ module.exports = function (socket, io) {
     io.to(socketId).emit("update-user", user);
   });
 
-  socket.on("log", async (data) => {});
+  socket.on("log", async (data) => {
+    const newLog = new Log(data);
+    newLog.save();
+  });
 
   socket.on("disconnect", () => {
     console.log("disconnected");
