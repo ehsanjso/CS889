@@ -15,6 +15,7 @@ export default function StudyToolbar() {
     countDown,
     isCountDown,
     user,
+    firstUse,
   } = useStudy();
   const [reason, setReason] = useState(undefined);
 
@@ -68,23 +69,37 @@ export default function StudyToolbar() {
             <h1 className="count-down">{countDown}</h1>
           ) : (
             <>
-              <h1>{studyDone ? "Study is finished!" : "Study is paused!"}</h1>
-              {studyDone ? (
-                <p>
-                  Thanks for your participation. Please click on the{" "}
-                  <a
-                    href={`${
-                      user.studyType === "control"
-                        ? "https://forms.gle/QLUGY95fdNJCdTkn7"
-                        : "https://forms.gle/RJHSGA9KUZnjAh1C8"
-                    }`}
-                  >
-                    link
-                  </a>{" "}
-                  to fill out the post-study questionnaire.
-                </p>
+              {firstUse ? (
+                <>
+                  <h1>Welcome to our study!</h1>
+                  <p>
+                    Please write a story about a child who is having a bizarre
+                    day at school.
+                  </p>
+                </>
               ) : (
-                <p>To continue the study click on the play button.</p>
+                <>
+                  <h1>
+                    {studyDone ? "Study is finished!" : "Study is paused!"}
+                  </h1>
+                  {studyDone ? (
+                    <p>
+                      Thanks for your participation. Please click on the{" "}
+                      <a
+                        href={`${
+                          user.studyType === "control"
+                            ? "https://forms.gle/QLUGY95fdNJCdTkn7"
+                            : "https://forms.gle/RJHSGA9KUZnjAh1C8"
+                        }`}
+                      >
+                        link
+                      </a>{" "}
+                      to fill out the post-study questionnaire.
+                    </p>
+                  ) : (
+                    <p>To continue the study click on the play button.</p>
+                  )}
+                </>
               )}
             </>
           )}

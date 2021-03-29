@@ -33,6 +33,7 @@ export function StudyProvider({ children, user }) {
   const didMountRef = useRef(false);
   let intervalRef = useRef();
 
+  const firstUse = sec === 0;
   const studyTimeLength = 15 * 60;
   const remainingTime = studyTimeLength - sec;
 
@@ -177,6 +178,7 @@ export function StudyProvider({ children, user }) {
         isCountDown,
         sec,
         user,
+        firstUse,
       }}
     >
       {children}
