@@ -72,9 +72,9 @@ export function StudyProvider({ children, user }) {
 
   useEffect(() => {
     if (!user.isStudyDone) {
-      if (remainingTime === 10 * 60) {
+      if (remainingTime === 5 * 60) {
         reminder("10 min is remaining!");
-      } else if (remainingTime === 5 * 60) {
+      } else if (remainingTime === 3 * 60) {
         reminder("5 min is remaining!");
       } else if (remainingTime === 60) {
         reminder("Less than 1 min is remaining!");
