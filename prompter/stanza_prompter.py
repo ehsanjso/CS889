@@ -24,25 +24,21 @@ def get_next_question_sql(user_id, all_questions):
     userPrompts = sql.getUserPrompts(user_id, prompt_ids)
     used_prompt_ids = [pid for (_,_,pid,_) in userPrompts]
     unused_prompt_ids = list(set(prompt_ids).difference(used_prompt_ids))
-    print('tc',unused_prompt_ids)
-    print('tc',characters)
+    
     # If there are unused prompt texts
     if len(unused_prompt_ids) > 0:
         random_prompt_id = random.choice(unused_prompt_ids)
         random_character = random.choice(characters)
         prompt = sql.getPromptById(random_prompt_id)
-        if prompt == None:
-            #Somehow the prompt isn't in the db if we get here
-            return {}
-        else:
-            prompt_id,prompt_text = prompt
-            sql.addUserPrompt(user_id,prompt_id,random_character['character'])
-            return {
-                "character":random_character['character'],
-                "prompt_text":prompt_text,
-                "start_idx": random_character['start_idx'],
-                "end_idx": random_character['end_idx']
-            }
+        prompt_id,prompt_text = prompt
+        sql.addUserPrompt(user_id,prompt_id,random_character['character'])
+        return {
+            "character":random_character['character'],
+            "prompt_text":prompt_text,
+            "start_idx": random_character['start_idx'],
+            "end_idx": random_character['end_idx']
+        }
+
     else:
         distinct_characters = list(set([character['character'] for character in characters]))
         random.shuffle(distinct_characters)
@@ -55,19 +51,16 @@ def get_next_question_sql(user_id, all_questions):
                 random_char_prompt_id = random.choice(unused_char_prompt_ids)
                 selected_character = next(filter(lambda c: c['character'] == character, characters), None)
                 prompt = sql.getPromptById(random_char_prompt_id)
-
-                if prompt == None:
-                    return {}
-                else:
-                    prompt_id,prompt_text = prompt
-                    sql.addUserPrompt(user_id,prompt_id,selected_character['character'])
-                    return {
-                        "character":selected_character['character'],
-                        "prompt_text":prompt_text,
-                        "start_idx": selected_character['start_idx'],
-                        "end_idx": selected_character['end_idx']
-                    }
-    #Don't even know if it's possible to get here
+                
+                prompt_id,prompt_text = prompt
+                sql.addUserPrompt(user_id,prompt_id,selected_character['character'])
+                return {
+                    "character":selected_character['character'],
+                    "prompt_text":prompt_text,
+                    "start_idx": selected_character['start_idx'],
+                    "end_idx": selected_character['end_idx']
+                }
+    
     return {}
 
 def storable_question(question):
