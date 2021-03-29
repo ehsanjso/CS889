@@ -33,7 +33,7 @@ export function StudyProvider({ children, user }) {
   const didMountRef = useRef(false);
   let intervalRef = useRef();
 
-  const studyTimeLength = 2 * 60;
+  const studyTimeLength = 15 * 60;
   const remainingTime = studyTimeLength - sec;
 
   let request = null;
