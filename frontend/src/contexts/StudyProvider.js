@@ -173,6 +173,7 @@ export function StudyProvider({ children, user }) {
         handleCountDown,
         countDown,
         isCountDown,
+        sec,
       }}
     >
       {children}

@@ -21,10 +21,10 @@ const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 export default function Controls() {
   return (
-    <div className="controls">
+    <div className="controls disabled">
       <div className="controls-left">
         <div className="control-section">
-          <MarkButton>
+          <MarkButton disabled>
             <FontSizeOutlined />
           </MarkButton>
         </div>
@@ -151,6 +151,7 @@ const MarkButton = ({ format, children, text }) => {
         }`}
         onMouseDown={(event) => {
           event.preventDefault();
+
           toggleMark(editor, format);
         }}
       >

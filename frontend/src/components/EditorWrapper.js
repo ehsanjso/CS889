@@ -15,13 +15,13 @@ import { usePrompt } from "../contexts/PromptProvider";
 import { v4 as uuidv4 } from "uuid";
 import Controls from "./Controls";
 
-const HOTKEYS = {
-  "mod+b": "bold",
-  "mod+i": "italic",
-  "mod+u": "underline",
-  "mod+`": "code",
-  "mod+h": "highlight",
-};
+// const HOTKEYS = {
+//   "mod+b": "bold",
+//   "mod+i": "italic",
+//   "mod+u": "underline",
+//   "mod+`": "code",
+//   "mod+h": "highlight",
+// };
 
 const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
   const [value, setValue] = useState(
@@ -85,10 +85,6 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
 
           if (character && Text.isText(node)) {
             const { text } = node;
-            // console.log("/////////////////////////////");
-            // console.log(node);
-            // console.log(character);
-            // console.log(text);
             const parts = text.split(character);
             let offset = 0;
 
@@ -134,15 +130,15 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
         decorate={decorate}
         spellCheck
         autoFocus
-        onKeyDown={(event) => {
-          for (const hotkey in HOTKEYS) {
-            if (isHotkey(hotkey, event)) {
-              event.preventDefault();
-              const mark = HOTKEYS[hotkey];
-              toggleMark(editor, mark);
-            }
-          }
-        }}
+        // onKeyDown={(event) => {
+        //   for (const hotkey in HOTKEYS) {
+        //     if (isHotkey(hotkey, event)) {
+        //       event.preventDefault();
+        //       const mark = HOTKEYS[hotkey];
+        //       toggleMark(editor, mark);
+        //     }
+        //   }
+        // }}
         className="editor"
         placeholder="Type or paste your text here!"
       />
@@ -150,28 +146,28 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
   );
 };
 
-const toggleMark = (editor, format) => {
-  const isActive = isMarkActive(editor, format);
+// const toggleMark = (editor, format) => {
+//   const isActive = isMarkActive(editor, format);
 
-  if (isActive) {
-    Editor.removeMark(editor, format);
-  } else {
-    Editor.addMark(editor, format, true);
-  }
+//   if (isActive) {
+//     Editor.removeMark(editor, format);
+//   } else {
+//     Editor.addMark(editor, format, true);
+//   }
 
-  if (format === "highlight") {
-    if (isActive) {
-      Editor.removeMark(editor, "key");
-    } else {
-      Editor.addMark(editor, "key", uuidv4());
-    }
-  }
-};
+//   if (format === "highlight") {
+//     if (isActive) {
+//       Editor.removeMark(editor, "key");
+//     } else {
+//       Editor.addMark(editor, "key", uuidv4());
+//     }
+//   }
+// };
 
-const isMarkActive = (editor, format) => {
-  const marks = Editor.marks(editor);
-  return marks ? marks[format] === true : false;
-};
+// const isMarkActive = (editor, format) => {
+//   const marks = Editor.marks(editor);
+//   return marks ? marks[format] === true : false;
+// };
 
 const Element = ({ attributes, children, element }) => {
   switch (element.type) {

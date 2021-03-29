@@ -4,6 +4,7 @@ import { message } from "antd";
 import { Node } from "slate";
 import axios from "axios";
 import { useSocket } from "./SocketProvider";
+import { useTrack } from "./TrackProvider";
 import { host } from "../actions/consts/host";
 import { useDispatch } from "react-redux";
 import { changeFetchInProg } from "../actions/fetchInProgress";
@@ -17,6 +18,7 @@ export function usePrompt() {
 export function PromptProvider({ children, user }) {
   const socket = useSocket();
   const dispatch = useDispatch();
+  const { trackEvent } = useTrack();
 
   const [activePrompt, setActivePrompt] = useState(undefined);
   const [prompts, setPrompts] = useState([]);
@@ -67,15 +69,34 @@ export function PromptProvider({ children, user }) {
   const updateText = (textObject) => {
     setTextData(textObject);
     addText(textObject, generalNoteData);
+    const text = serialize(textObject);
+    trackEvent({
+      text: text,
+      wordCount: text.split(" ").length,
+      section: "main-text",
+    });
   };
 
   const updateGeneralNote = (noteObject) => {
     setGeneralNoteData(noteObject);
+    const text = serialize(noteObject);
+    trackEvent({
+      text: text,
+      wordCount: text.split(" ").length,
+      section: "note-text",
+    });
   };
 
   const updatePromptNote = (noteObject, localStorageKey, promptId) => {
     socket.emit("update-prompt-note", {
       noteObject,
+      promptId,
+    });
+    const text = serialize(noteObject);
+    trackEvent({
+      text: text,
+      wordCount: text.split(" ").length,
+      section: "prompot-note-text",
       promptId,
     });
   };
@@ -84,6 +105,11 @@ export function PromptProvider({ children, user }) {
     socket.emit("update-prompt-feedback", {
       hasStar,
       promptId,
+    });
+    trackEvent({
+      promptId,
+      section: "prompt-feedback",
+      value: hasStar,
     });
   };
 
@@ -113,6 +139,12 @@ export function PromptProvider({ children, user }) {
 
   const askForPrompt = () => {
     initiatePrompt();
+    const text = serialize(textData);
+    trackEvent({
+      text: text,
+      wordCount: text.split(" ").length,
+      section: "ask-prompt",
+    });
   };
 
   useEffect(() => {
