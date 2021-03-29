@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    isStudyDone: {
+      type: Boolean,
+      required: true,
+    },
     pauses: [
       {
         reason: { type: String },
@@ -55,10 +59,6 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    isStudyDone: {
-      type: Boolean,
-      required: true,
-    },
     studyType: {
       type: String,
       required: true,

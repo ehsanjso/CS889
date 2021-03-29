@@ -168,6 +168,7 @@ export function PromptProvider({ children, user }) {
     socket.emit("initiate-prompt", {
       text: serialize(textData),
       userId: user._id,
+      type: user.studyType,
     });
   };
 

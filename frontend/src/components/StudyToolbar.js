@@ -14,6 +14,7 @@ export default function StudyToolbar() {
     handleCountDown,
     countDown,
     isCountDown,
+    user,
   } = useStudy();
   const [reason, setReason] = useState(undefined);
 
@@ -61,18 +62,6 @@ export default function StudyToolbar() {
         />
       </Modal>
 
-      <Modal
-        title="Study is finished!"
-        visible={studyDone}
-        centered
-        closable={false}
-      >
-        <p>
-          Thanks for your participation. Please click on the{" "}
-          <a href="#">link</a> and fill the post-study questionnaire.
-        </p>
-      </Modal>
-
       <div className="overlay">
         <div className="overlay-box">
           {isCountDown ? (
@@ -80,7 +69,23 @@ export default function StudyToolbar() {
           ) : (
             <>
               <h1>{studyDone ? "Study is finished!" : "Study is paused!"}</h1>
-              <p>To continue the study click on the play button.</p>
+              {studyDone ? (
+                <p>
+                  Thanks for your participation. Please click on the{" "}
+                  <a
+                    href={`${
+                      user.studyType === "control"
+                        ? "https://forms.gle/QLUGY95fdNJCdTkn7"
+                        : "https://forms.gle/RJHSGA9KUZnjAh1C8"
+                    }`}
+                  >
+                    link
+                  </a>{" "}
+                  to fill out the post-study questionnaire.
+                </p>
+              ) : (
+                <p>To continue the study click on the play button.</p>
+              )}
             </>
           )}
         </div>

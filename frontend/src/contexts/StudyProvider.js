@@ -33,7 +33,7 @@ export function StudyProvider({ children, user }) {
   const didMountRef = useRef(false);
   let intervalRef = useRef();
 
-  const studyTimeLength = 15 * 60;
+  const studyTimeLength = 2 * 60;
   const remainingTime = studyTimeLength - sec;
 
   let request = null;
@@ -70,18 +70,20 @@ export function StudyProvider({ children, user }) {
   };
 
   useEffect(() => {
-    if (remainingTime === 10 * 60) {
-      reminder("10 min is remaining!");
-    } else if (remainingTime === 5 * 60) {
-      reminder("5 min is remaining!");
-    } else if (remainingTime === 60) {
-      reminder("Less than 1 min is remaining!");
-    }
+    if (!user.isStudyDone) {
+      if (remainingTime === 10 * 60) {
+        reminder("10 min is remaining!");
+      } else if (remainingTime === 5 * 60) {
+        reminder("5 min is remaining!");
+      } else if (remainingTime === 60) {
+        reminder("Less than 1 min is remaining!");
+      }
 
-    if (remainingTime < 0) {
-      setStudyDone(true);
-      updateStudyTime(studyTimeLength - remainingTime);
-      updateStudyDone(true);
+      if (remainingTime < 0) {
+        setStudyDone(true);
+        updateStudyTime(studyTimeLength - remainingTime);
+        updateStudyDone(true);
+      }
     }
   }, [remainingTime, dispatch, studyTimeLength]);
 
@@ -174,6 +176,7 @@ export function StudyProvider({ children, user }) {
         countDown,
         isCountDown,
         sec,
+        user,
       }}
     >
       {children}

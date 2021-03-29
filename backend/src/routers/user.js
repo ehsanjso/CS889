@@ -9,7 +9,7 @@ router.post("/users", async (req, res) => {
     isVerified: false,
     isAdmin: false,
     logData: false,
-    studyType: "Baseline",
+    studyType: "control",
     logData: false,
     studyMode: false,
     studyTime: 0,

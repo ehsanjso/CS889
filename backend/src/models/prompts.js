@@ -32,6 +32,10 @@ const promptSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
     note: {
       type: String,
     },

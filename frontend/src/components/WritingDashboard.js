@@ -28,30 +28,34 @@ export default function WritingDashboard({ user }) {
       {initiated && (
         <>
           <Writing storageKey="cs889" text={textData} />
-          <Prompts />
-          <Drawer
-            title="Notes"
-            className="note-drawer"
-            placement="left"
-            closable={true}
-            onClose={onClose}
-            visible={visible}
-            mask={false}
-            width={500}
-          >
-            <Writing
-              noToolbar={true}
-              storageKey="cs889-notes"
-              text={generalNoteData}
-            />
-          </Drawer>
-          <div
-            className={`note-btn ${visible ? "active" : ""}`}
-            onClick={toggleDrawer}
-          >
-            {visible ? <CaretLeftOutlined /> : <CaretRightOutlined />}
-            <FileTextOutlined />
-          </div>
+          {user.studyType !== "control" && (
+            <>
+              <Prompts />
+              <Drawer
+                title="Notes"
+                className="note-drawer"
+                placement="left"
+                closable={true}
+                onClose={onClose}
+                visible={visible}
+                mask={false}
+                width={500}
+              >
+                <Writing
+                  noToolbar={true}
+                  storageKey="cs889-notes"
+                  text={generalNoteData}
+                />
+              </Drawer>
+              <div
+                className={`note-btn ${visible ? "active" : ""}`}
+                onClick={toggleDrawer}
+              >
+                {visible ? <CaretLeftOutlined /> : <CaretRightOutlined />}
+                <FileTextOutlined />
+              </div>{" "}
+            </>
+          )}
         </>
       )}
 

@@ -42,7 +42,7 @@ module.exports = function (socket, io) {
     await newText.save();
   });
 
-  socket.on("initiate-prompt", async ({ text, userId }) => {
+  socket.on("initiate-prompt", async ({ text, userId, type }) => {
     try {
       // const { data } = await axios.get(
       //   encodeURI(
@@ -52,7 +52,7 @@ module.exports = function (socket, io) {
 
       const { data } = await axios.get(
         encodeURI(
-          `${host}/api/get_next_prompt?user_text=${text}&prompt_type=story&user_id=${userId}`
+          `${host}/api/get_next_prompt?user_text=${text}&prompt_type=${type}&user_id=${userId}`
         )
       );
 
@@ -66,6 +66,7 @@ module.exports = function (socket, io) {
           hasStar: false,
           character: data.character,
           deleted: false,
+          type,
         };
 
         const prompt = new Prompt(newPrompt);
