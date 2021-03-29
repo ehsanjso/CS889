@@ -39,7 +39,7 @@ class CharacterReference:
     full_end_idx: int
     emotion: str = ''
 
-    def __init__(self, mention, sentences):
+    def __init__(self, mention, sentences, user_text):
         self.sent_num = mention.sentNum
         self.tok_num = mention.headIndex
         sentence = sentences[self.sent_num]
@@ -51,10 +51,10 @@ class CharacterReference:
         self.full_start_tok = mention.startIndex
         self.full_end_tok = mention.endIndex
         full_tokens = sentence.token[self.full_start_tok:self.full_end_tok]
-        full_strings = [capitalize_token(t) for t in full_tokens]
-        self.full_str = ' '.join(full_strings)
+        # full_strings = [capitalize_token(t) for t in full_tokens]
         self.full_start_idx = full_tokens[0].beginChar
         self.full_end_idx = full_tokens[-1].endChar
+        self.full_str = user_text[self.full_start_idx:self.full_end_idx]
 
 
 @dataclass
@@ -66,16 +66,16 @@ class Character:
     gender: Gender
     references: List[CharacterReference]
 
-    def __init__(self, mention, sentences):
+    def __init__(self, mention, sentences, user_text):
         self.id = mention.corefClusterID
         self.is_named = is_named_mention(mention)
         self.person = mention.headString.capitalize() if self.is_named else mention.person
         self.num = get_num(mention)
         self.gender = get_gender(mention)
-        self.references = [CharacterReference(mention, sentences)]
+        self.references = [CharacterReference(mention, sentences, user_text)]
 
-    def update(self, mention, sentences):
-        self.references.append(CharacterReference(mention, sentences))
+    def update(self, mention, sentences, user_text):
+        self.references.append(CharacterReference(mention, sentences, user_text))
         if not self.is_named and is_named_mention(mention):
             self.is_named = True
             self.person = mention.headString.capitalize()
@@ -88,9 +88,11 @@ class Character:
 class DocumentInfo:
     chars: Dict[int, Character]
     char_ref_for_loc: Dict[int, Dict[int, CharacterReference]]
+    user_text: str
 
-    def __init__(self, document):
+    def __init__(self, document, text):
         self.chars, self.char_ref_for_loc = {}, {}
+        self.user_text = text
         for mention in self._get_animate_mentions(document):
             self._add_char(mention, document.sentence)
         self._add_emotions(document.sentence)
@@ -108,9 +110,9 @@ class DocumentInfo:
     def _add_char(self, mention, sentences):
         char_id = mention.corefClusterID
         if char_id not in self.chars:
-            self.chars[char_id] = Character(mention, sentences)
+            self.chars[char_id] = Character(mention, sentences, self.user_text)
         else:
-            self.chars[char_id].update(mention, sentences)
+            self.chars[char_id].update(mention, sentences, self.user_text)
         self._add_latest_char_ref(char_id)
 
     def _add_latest_char_ref(self, char_id):
