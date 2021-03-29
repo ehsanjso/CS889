@@ -73,7 +73,7 @@ export function PromptProvider({ children, user }) {
   const updateText = (textObject) => {
     setTextData(textObject);
     addText(textObject, generalNoteData);
-    const text = serialize(textObject);
+    const text = textObject ? serialize(textObject) : "";
     trackEvent({
       text: text,
       wordCount: text.split(" ").length,
@@ -83,7 +83,7 @@ export function PromptProvider({ children, user }) {
 
   const updateGeneralNote = (noteObject) => {
     setGeneralNoteData(noteObject);
-    const text = serialize(noteObject);
+    const text = noteObject ? serialize(noteObject) : "";
     trackEvent({
       text: text,
       wordCount: text.split(" ").length,
@@ -96,7 +96,7 @@ export function PromptProvider({ children, user }) {
       noteObject,
       promptId,
     });
-    const text = serialize(noteObject);
+    const text = noteObject ? serialize(noteObject) : "";
     trackEvent({
       text: text,
       wordCount: text.split(" ").length,
@@ -118,11 +118,15 @@ export function PromptProvider({ children, user }) {
   };
 
   const addPrompt = (prompt) => {
-    setPrompts((prevPrompts) => {
-      const prompts = prevPrompts ? [...prevPrompts] : [];
-      prompts.push(prompt);
-      return prompts;
-    });
+    if (prompt) {
+      setPrompts((prevPrompts) => {
+        const prompts = prevPrompts ? [...prevPrompts] : [];
+        prompts.push(prompt);
+        return prompts;
+      });
+    } else {
+      message.warning("We don't have new prompts at the moment!");
+    }
   };
 
   const updatePrompt = (prompt) => {
@@ -143,7 +147,7 @@ export function PromptProvider({ children, user }) {
 
   const askForPrompt = () => {
     initiatePrompt();
-    const text = serialize(textData);
+    const text = textData ? serialize(textData) : "";
     trackEvent({
       text: text,
       wordCount: text.split(" ").length,
@@ -169,8 +173,9 @@ export function PromptProvider({ children, user }) {
 
   const initiatePrompt = () => {
     dispatch(changeFetchInProg(true));
+    const text = textData ? serialize(textData) : "";
     socket.emit("initiate-prompt", {
-      text: serialize(textData),
+      text: text,
       userId: user._id,
       type: user.studyType,
     });

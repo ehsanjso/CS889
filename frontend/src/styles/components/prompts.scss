@@ -57,6 +57,11 @@
     height: 45px;
     font-size: 20px;
   }
+
+  .disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
 }
 
 .prompt {

@@ -73,11 +73,14 @@ module.exports = function (socket, io) {
         prompt.save();
 
         io.to(socketId).emit("receive-prompt", prompt);
+      } else {
+        io.to(socketId).emit("receive-prompt", undefined);
       }
 
       io.to(socketId).emit("change-loading", false);
     } catch (e) {
       console.log(e);
+      io.to(socketId).emit("receive-prompt", undefined);
       io.to(socketId).emit("change-loading", false);
     }
   });
