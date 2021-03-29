@@ -8,6 +8,7 @@ const mongoose = require("./db/mongoose");
 const userRouter = require("./routers/user");
 const textRouter = require("./routers/text");
 const promptRouter = require("./routers/prompt");
+const studyRouter = require("./routers/study");
 const { adminBro, adminRouter } = require("./routers/admin");
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(userRouter);
 app.use(textRouter);
 app.use(promptRouter);
+app.use(studyRouter);
 
 const server = http.createServer(app);
 const io = socketio(server, {
