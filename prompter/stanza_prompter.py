@@ -9,40 +9,66 @@ from sql_layer import SqlLayer
 SUGGESTED_PROMPTS_FOR_USER = {}
 SUGGESTED_PROMPT_TEXTS_FOR_USER = {}
 
-def get_next_question_sql(user_id, all_questions):    
+def get_next_question_sql(user_id, all_questions):
     sql = SqlLayer('prompt_history.db')
     sql_user = sql.addUser(user_id)
+    characters = [{ "character": question['character'], "start_idx": question['start_idx'], "end_idx": question['end_idx'] } for question in all_questions]
 
     #Load all the prompts into the prompts table and record their ids
     #This returns prompt ids that already exist if possible
     prompt_ids = []
     for prompt in all_questions:
-        prompt_id,_,_ = sql.addPrompt(prompt['character'], prompt['prompt_text'])
+        prompt_id,_ = sql.addPrompt(prompt['prompt_text'])
         prompt_ids.append(prompt_id)
-
+    
     userPrompts = sql.getUserPrompts(user_id, prompt_ids)
-    used_prompt_ids = [pid for (_,_,pid) in userPrompts]
-
-    #Get a list of all prompt_ids in the prompts table that aren't paired
-    #with this user in the user_prompt table (probably could have done a join here)
-    unused_prompt_ids = list(set(prompt_ids).difference(used_prompt_ids))    
-    if len(unused_prompt_ids) <= 0:
-        print('Out of prompts')
-        return {}
-
-    random_prompt_id = random.choice(unused_prompt_ids)
-    prompt = sql.getPromptById(random_prompt_id)
-    if prompt == None:
-        return {}
+    used_prompt_ids = [pid for (_,_,pid,_) in userPrompts]
+    unused_prompt_ids = list(set(prompt_ids).difference(used_prompt_ids))
+    print('tc',unused_prompt_ids)
+    print('tc',characters)
+    # If there are unused prompt texts
+    if len(unused_prompt_ids) > 0:
+        random_prompt_id = random.choice(unused_prompt_ids)
+        random_character = random.choice(characters)
+        prompt = sql.getPromptById(random_prompt_id)
+        if prompt == None:
+            #Somehow the prompt isn't in the db if we get here
+            return {}
+        else:
+            prompt_id,prompt_text = prompt
+            sql.addUserPrompt(user_id,prompt_id,random_character['character'])
+            return {
+                "character":random_character['character'],
+                "prompt_text":prompt_text,
+                "start_idx": random_character['start_idx'],
+                "end_idx": random_character['end_idx']
+            }
     else:
-        prompt_id,character,prompt_text = prompt
+        distinct_characters = list(set([character['character'] for character in characters]))
+        random.shuffle(distinct_characters)
 
-        # Add a record to the DB to show we've exhausted this prompt
-        sql.addUserPrompt(user_id,prompt_id)
-        return {
-            "character":character,
-            "prompt_text":prompt_text
-        }
+        for character in distinct_characters:
+            charUserPrompts = sql.getUserPrompts(user_id, prompt_ids, character)
+            used_char_prompt_ids = [pid for (_,_,pid,_) in charUserPrompts]
+            unused_char_prompt_ids = list(set(prompt_ids).difference(used_char_prompt_ids))
+            if len(unused_char_prompt_ids) > 0:
+                random_char_prompt_id = random.choice(unused_char_prompt_ids)
+                selected_character = next(filter(lambda c: c['character'] == character, characters), None)
+                prompt = sql.getPromptById(random_char_prompt_id)
+
+                if prompt == None:
+                    return {}
+                else:
+                    prompt_id,prompt_text = prompt
+                    sql.addUserPrompt(user_id,prompt_id,selected_character['character'])
+                    return {
+                        "character":selected_character['character'],
+                        "prompt_text":prompt_text,
+                        "start_idx": selected_character['start_idx'],
+                        "end_idx": selected_character['end_idx']
+                    }
+    #Don't even know if it's possible to get here
+    return {}
 
 def storable_question(question):
     return f"{question['character']} - {question['prompt_text']}"

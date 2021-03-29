@@ -49,23 +49,22 @@ class SqlLayer:
     ###
     #  Prompts
     ###
-    def addPrompt(self, character, question):
-        prompt = self.checkPromptExists(character,question)
+    def addPrompt(self, prompt_text):
+        prompt = self.checkPromptExists(prompt_text)
         if prompt is not None:
             return prompt
 
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
-            print(question)
-            cursor.execute("INSERT INTO prompts (character,question) VALUES (?,?)", (character,question,))
+            cursor.execute("INSERT INTO prompts (prompt_text) VALUES (?)", (prompt_text,))
             conn.commit()
         
-        return self.checkPromptExists(character, question)
+        return self.checkPromptExists(prompt_text)
 
-    def checkPromptExists(self, character,question):
+    def checkPromptExists(self, prompt_text):
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
-            rs = cursor.execute('SELECT * FROM prompts WHERE character=? AND question=?', (character,question,))
+            rs = cursor.execute('SELECT * FROM prompts WHERE prompt_text=?', (prompt_text,))
             return cursor.fetchone()
     
     def getPromptById(self, prompt_id):
@@ -77,31 +76,37 @@ class SqlLayer:
     ###
     #  UserPrompts
     ###
-    def addUserPrompt(self, user_id,prompt_id):
-        user_prompt = self.checkUserPromptExists(user_id, prompt_id)
+    def addUserPrompt(self, user_id,prompt_id,character):
+        user_prompt = self.checkUserPromptExists(user_id, prompt_id, character)
 
         if user_prompt is not None:
             return user_prompt
 
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO user_prompts (user_id,prompt_id) VALUES (?,?)", (user_id, prompt_id,))
+            cursor.execute("INSERT INTO user_prompts (user_id,prompt_id,character) VALUES (?,?,?)", (user_id, prompt_id,character))
             conn.commit()
         
-        return self.checkUserPromptExists(user_id, prompt_id)
+        return self.checkUserPromptExists(user_id, prompt_id,character)
 
-    def checkUserPromptExists(self, user_id,prompt_id):
+    def checkUserPromptExists(self, user_id,prompt_id, character):
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
-            rs = cursor.execute('SELECT * FROM user_prompts WHERE user_id=? AND prompt_id=?', (user_id,prompt_id,))
+            rs = cursor.execute('SELECT * FROM user_prompts WHERE user_id=? AND prompt_id=? AND character=?', (user_id,prompt_id,character))
             return cursor.fetchone()
     
-    def getUserPrompts(self, user_id, prompt_ids):
+    def getUserPrompts(self, user_id, prompt_ids, character = None):
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
             query_params = ','.join(['?'] * len(prompt_ids))
-            query = f'SELECT * FROM user_prompts WHERE user_id=? AND prompt_id in ({query_params})'
             args = prompt_ids.copy()
+            character_query = ''
+            
+            if character is not None:
+                args.insert(0,character)
+                character_query = 'AND character=?'
+
             args.insert(0,user_id)
+            query = f'SELECT * FROM user_prompts WHERE user_id=? {character_query} AND prompt_id in ({query_params})'
             rs = cursor.execute(query, args)
             return cursor.fetchall()
