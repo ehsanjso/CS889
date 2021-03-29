@@ -97,7 +97,7 @@ def get_prompts(text, prompt_type, user_id='', show_all=True, server='localhost'
                        start_server=StartServer.DONT_START,
                        annotators=['coref', 'openie']) as client:
         document = client.annotate(text)
-        document_info = DocumentInfo(document)
+        document_info = DocumentInfo(document, text)
         all_questions = get_all_questions(document_info, prompt_type)
 
         return all_questions if show_all else get_next_question_sql(user_id, all_questions)
