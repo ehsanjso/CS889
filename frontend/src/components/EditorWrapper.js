@@ -104,11 +104,11 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
         });
       }
 
-      tempRanges.forEach((element) => {
+      tempRanges.forEach((element, index) => {
         element.sort((a, b) => {
           return (
-            Math.abs(prompt.startIdx - a.anchor.offset) -
-            Math.abs(prompt.startIdx - b.anchor.offset)
+            Math.abs(filteredPrompts[index].startIdx - a.anchor.offset) -
+            Math.abs(filteredPrompts[index].startIdx - b.anchor.offset)
           );
         });
         if (!R.isEmpty(element)) {
