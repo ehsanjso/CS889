@@ -1,4 +1,6 @@
 import sys
+import os
+from datetime import datetime
 
 # insert at 1, 0 is the script path (or '' in REPL)
 sys.path.insert(1, './config')
@@ -35,6 +37,10 @@ def index():
     is_debug = app.config['DEBUG']
     return render_template('index.html', is_story=True, show_all_prompts=True, is_debug=is_debug)
 
+@app.route('/reset_db', methods=['GET'])
+def reset_db():
+    os.rename('prompt_history.db',f'prompt_history.db.old_{datetime.now()}')
+    return "Database reset"
 
 @app.route('/submit', methods=['POST'])
 def submit():
