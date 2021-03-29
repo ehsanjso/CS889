@@ -28,15 +28,15 @@ def get_next_question_sql(user_id, all_questions):
     # If there are unused prompt texts
     if len(unused_prompt_ids) > 0:
         random_prompt_id = random.choice(unused_prompt_ids)
-        random_character = random.choice(characters)
-        prompt = sql.getPromptById(random_prompt_id)
-        prompt_id,prompt_text = prompt
-        sql.addUserPrompt(user_id,prompt_id,random_character['character'])
+        prompt_id, prompt_text = sql.getPromptById(random_prompt_id)
+        original_prompt = [p for p in all_questions if p['prompt_text'] == prompt_text][0]
+
+        sql.addUserPrompt(user_id,prompt_id,original_prompt['character'])
         return {
-            "character":random_character['character'],
+            "character":original_prompt['character'],
             "prompt_text":prompt_text,
-            "start_idx": random_character['start_idx'],
-            "end_idx": random_character['end_idx']
+            "start_idx": original_prompt['start_idx'],
+            "end_idx": original_prompt['end_idx']
         }
 
     else:
@@ -47,19 +47,32 @@ def get_next_question_sql(user_id, all_questions):
             charUserPrompts = sql.getUserPrompts(user_id, prompt_ids, character)
             used_char_prompt_ids = [pid for (_,_,pid,_) in charUserPrompts]
             unused_char_prompt_ids = list(set(prompt_ids).difference(used_char_prompt_ids))
-            if len(unused_char_prompt_ids) > 0:
+            
+            while len(unused_char_prompt_ids) > 0:
                 random_char_prompt_id = random.choice(unused_char_prompt_ids)
-                selected_character = next(filter(lambda c: c['character'] == character, characters), None)
                 prompt = sql.getPromptById(random_char_prompt_id)
-                
                 prompt_id,prompt_text = prompt
-                sql.addUserPrompt(user_id,prompt_id,selected_character['character'])
-                return {
-                    "character":selected_character['character'],
-                    "prompt_text":prompt_text,
-                    "start_idx": selected_character['start_idx'],
-                    "end_idx": selected_character['end_idx']
-                }
+
+                original_prompts = [p for p in all_questions if p['prompt_text'] == prompt_text and p['character'] == character]
+                
+                if len(original_prompts) > 0:
+                    original_prompt = original_prompts[0]
+                    sql.addUserPrompt(user_id,prompt_id,original_prompt['character'])
+                    return {
+                        "character":original_prompt['character'],
+                        "prompt_text":prompt_text,
+                        "start_idx": original_prompt['start_idx'],
+                        "end_idx": original_prompt['end_idx']
+                    }
+                else:
+                    unused_char_prompt_ids.remove(random_char_prompt_id)
+            
+            print(f"Out of prompts for {character}")
+            
+
+                
+                
+
     
     return {}
 
