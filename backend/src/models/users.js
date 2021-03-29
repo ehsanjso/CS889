@@ -48,7 +48,6 @@ const userSchema = new mongoose.Schema(
     },
     isStudyDone: {
       type: Boolean,
-      required: true,
     },
     pauses: [
       {
