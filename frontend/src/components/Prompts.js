@@ -7,15 +7,23 @@ import Prompt from "./Prompt";
 import "../styles/components/prompts.scss";
 
 export default function Prompts() {
-  const { prompts, askForPrompt } = usePrompt();
+  const { filteredPrompts, askForPrompt } = usePrompt();
   return (
     <div className="prompts-sidebar">
-      <div className={`prompt-inner ${R.isEmpty(prompts) ? "" : "not-empty"}`}>
-        {prompts.map((prompt) => (
+      <div
+        className={`prompt-inner ${
+          R.isEmpty(filteredPrompts) ? "" : "not-empty"
+        }`}
+      >
+        {filteredPrompts.map((prompt) => (
           <Prompt prompt={prompt} key={prompt._id} />
         ))}
       </div>
-      <div className={`ask-prompt ${R.isEmpty(prompts) ? "" : "not-empty"}`}>
+      <div
+        className={`ask-prompt ${
+          R.isEmpty(filteredPrompts) ? "" : "not-empty"
+        }`}
+      >
         <TypeWriter />
         <p>Do you feel stuck?</p>
         <Button type="primary" onClick={() => askForPrompt()}>

@@ -20,11 +20,10 @@ export function PromptProvider({ children, user }) {
 
   const [activePrompt, setActivePrompt] = useState(undefined);
   const [prompts, setPrompts] = useState([]);
+  const [filteredPrompts, setFilteredPrompts] = useState([]);
   const [textData, setTextData] = useState();
   const [generalNoteData, setGeneralNoteData] = useState();
   const [initiated, setInitiated] = useState(false);
-
-  console.log(prompts);
 
   useEffect(() => {
     async function getData() {
@@ -53,6 +52,17 @@ export function PromptProvider({ children, user }) {
     }
     getData();
   }, []);
+
+  useEffect(() => {
+    setFilteredPrompts(filterPrompts(prompts, textData));
+  }, [prompts, textData]);
+
+  const filterPrompts = (prompts, textData) => {
+    return prompts.filter((el) => {
+      const isInText = serialize(textData).includes(el.character);
+      return isInText;
+    });
+  };
 
   const updateText = (textObject) => {
     setTextData(textObject);
@@ -86,8 +96,8 @@ export function PromptProvider({ children, user }) {
   };
 
   const updatePrompt = (prompt) => {
-    setPrompts((prevDiscussions) => {
-      return prevDiscussions.map((el) => {
+    setPrompts((prevPrompt) => {
+      return prevPrompt.map((el) => {
         if (el["_id"] === prompt["_id"]) {
           const note = prompt.note ? JSON.parse(prompt.note) : undefined;
           return { ...prompt, note };
@@ -139,6 +149,7 @@ export function PromptProvider({ children, user }) {
         updatePromptNote,
         askForPrompt,
         prompts,
+        filteredPrompts,
         updatePromptFeedback,
         textData,
         generalNoteData,

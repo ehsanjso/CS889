@@ -37,12 +37,14 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
     updateText,
     updateGeneralNote,
     updatePromptNote,
-    prompts,
+    filteredPrompts,
   } = usePrompt();
   const renderElement = useCallback((props) => <Element {...props} />, [
-    prompts,
+    filteredPrompts,
   ]);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, [prompts]);
+  const renderLeaf = useCallback((props) => <Leaf {...props} />, [
+    filteredPrompts,
+  ]);
   const didMount = useRef(false);
 
   const debouncedFetch = useMemo(() => {
@@ -73,12 +75,12 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
     ([node, path]) => {
       const ranges = [];
       const tempRanges = [];
-      for (let j = 0; j < prompts.length; j++) {
+      for (let j = 0; j < filteredPrompts.length; j++) {
         tempRanges[j] = [];
       }
 
-      if (!R.isEmpty(prompts)) {
-        prompts.forEach((prompt, index) => {
+      if (!R.isEmpty(filteredPrompts)) {
+        filteredPrompts.forEach((prompt, index) => {
           const character = prompt.character;
 
           if (character && Text.isText(node)) {
@@ -120,7 +122,7 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
 
       return ranges;
     },
-    [prompts]
+    [filteredPrompts]
   );
 
   return (
