@@ -27,8 +27,6 @@ export function PromptProvider({ children, user }) {
   const [generalNoteData, setGeneralNoteData] = useState();
   const [initiated, setInitiated] = useState(false);
 
-  console.log(prompts);
-
   useEffect(() => {
     async function getData() {
       dispatch(changeFetchInProg(true));
