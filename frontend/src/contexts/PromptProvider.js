@@ -24,6 +24,8 @@ export function PromptProvider({ children, user }) {
   const [generalNoteData, setGeneralNoteData] = useState();
   const [initiated, setInitiated] = useState(false);
 
+  console.log(prompts);
+
   useEffect(() => {
     async function getData() {
       dispatch(changeFetchInProg(true));
@@ -87,7 +89,8 @@ export function PromptProvider({ children, user }) {
     setPrompts((prevDiscussions) => {
       return prevDiscussions.map((el) => {
         if (el["_id"] === prompt["_id"]) {
-          return { ...prompt, note: JSON.parse(prompt.note) };
+          const note = prompt.note ? JSON.parse(prompt.note) : undefined;
+          return { ...prompt, note };
         }
         return el;
       });

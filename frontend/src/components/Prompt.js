@@ -5,10 +5,13 @@ import Duck from "../assets/images/duck.png";
 import { usePrompt } from "../contexts/PromptProvider";
 
 export default function Prompt({ prompt }) {
-  const { updatePromptFeedback } = usePrompt();
+  const { updatePromptFeedback, activePrompt, setActivePrompt } = usePrompt();
 
   return (
-    <div className="prompt">
+    <div
+      className={`prompt ${activePrompt === prompt._id ? "active" : ""}`}
+      onClick={() => setActivePrompt(prompt._id)}
+    >
       <div className="prompt-message">
         <img src={Duck} alt="duck" />
         <p>{prompt.question}</p>

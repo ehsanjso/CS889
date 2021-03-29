@@ -6,9 +6,10 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import * as R from "ramda";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, Slate } from "slate-react";
-import { Editor, createEditor } from "slate";
+import { Editor, createEditor, Text } from "slate";
 import { withHistory } from "slate-history";
 import { usePrompt } from "../contexts/PromptProvider";
 import { v4 as uuidv4 } from "uuid";
@@ -31,10 +32,17 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
       },
     ]
   );
-  const renderElement = useCallback((props) => <Element {...props} />, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  const { updateText, updateGeneralNote, updatePromptNote } = usePrompt();
+  const {
+    updateText,
+    updateGeneralNote,
+    updatePromptNote,
+    prompts,
+  } = usePrompt();
+  const renderElement = useCallback((props) => <Element {...props} />, [
+    prompts,
+  ]);
+  const renderLeaf = useCallback((props) => <Leaf {...props} />, [prompts]);
   const didMount = useRef(false);
 
   const debouncedFetch = useMemo(() => {
@@ -61,18 +69,58 @@ const EditorWrapper = ({ noToolbar, storageKey, promptId, text }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  const decorate = useCallback(
+    ([node, path]) => {
+      const ranges = [];
+
+      if (!R.isEmpty(prompts)) {
+        prompts.forEach((prompt) => {
+          const character = prompt.character;
+          const tempRanges = [];
+
+          if (character && Text.isText(node)) {
+            const { text } = node;
+            const parts = text.split(character);
+            let offset = 0;
+
+            parts.forEach((part, i) => {
+              if (i !== 0) {
+                tempRanges.push({
+                  anchor: { path, offset: offset - character.length },
+                  focus: { path, offset },
+                  highlight: true,
+                  promptId: prompt._id,
+                });
+              }
+
+              offset = offset + part.length + character.length;
+            });
+          }
+          tempRanges.sort((a, b) => {
+            return (
+              Math.abs(prompt.startIdx - a.anchor.offset) -
+              Math.abs(prompt.startIdx - b.anchor.offset)
+            );
+          });
+
+          if (!R.isEmpty(tempRanges)) {
+            ranges.push(tempRanges[0]);
+          }
+        });
+      }
+
+      return ranges;
+    },
+    [prompts]
+  );
+
   return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={(value) => {
-        setValue(value);
-      }}
-    >
+    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
       {!noToolbar && <Controls />}
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
+        decorate={decorate}
         spellCheck
         autoFocus
         onKeyDown={(event) => {
@@ -136,9 +184,9 @@ const Element = ({ attributes, children, element }) => {
 const Leaf = ({ attributes, children, leaf }) => {
   const { activePrompt, setActivePrompt } = usePrompt();
   const onClick = () => {
-    const { key } = leaf;
-    if (key) {
-      setActivePrompt(leaf.key);
+    const { promptId } = leaf;
+    if (promptId) {
+      setActivePrompt(leaf.promptId);
     } else {
       setActivePrompt(undefined);
     }
@@ -163,7 +211,9 @@ const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.highlight) {
     children = (
       <span
-        className={`highlight ${activePrompt === leaf.key ? "selected" : ""}`}
+        className={`highlight ${
+          activePrompt === leaf.promptId ? "selected" : ""
+        }`}
         onClick={onClick}
       >
         {children}
@@ -185,19 +235,6 @@ const debounce = (func, delay) => {
     const args = arguments;
     clearTimeout(debounceHandler);
     debounceHandler = setTimeout(() => func.apply(context, args), delay);
-  };
-};
-
-const throttle = (func, limit) => {
-  let inThrottle;
-  return function () {
-    const args = arguments;
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
   };
 };
 

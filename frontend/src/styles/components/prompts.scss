@@ -74,6 +74,13 @@
   padding-bottom: 0;
   overflow: hidden;
   min-height: 150px;
+  border: 2px solid transparent;
+  transition: 0.2s all ease;
+
+  &.active {
+    border: 2px solid $primary;
+    margin-left: 0px;
+  }
 
   .prompt-message {
     display: flex;
