@@ -34,7 +34,7 @@ export function StudyProvider({ children, user }) {
   let intervalRef = useRef();
 
   const firstUse = sec === 0;
-  const studyTimeLength = 15 * 60;
+  const studyTimeLength = 10 * 60;
   const remainingTime = studyTimeLength - sec;
 
   let request = null;
